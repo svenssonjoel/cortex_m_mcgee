@@ -25,6 +25,14 @@
 #ifndef __REGISTERS_H_
 #define __REGISTERS_H_
 
+/* 
+   register codes (for use as part of an opcode) are:
+     0 - 12 for R0 - R12.
+     14 for R14.
+
+   13 and 15 can be used in certain instructions.
+*/
+
 typedef enum {
   r0,
   r1,
