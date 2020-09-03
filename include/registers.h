@@ -22,26 +22,30 @@
 /* SOFTWARE.									  */
 /**********************************************************************************/
 
-#ifndef __THUMB_H_
-#define __THUMB_H_
+#ifndef __REGISTERS_H_
+#define __REGISTERS_H_
 
-#include <stdint.h>
+typedef enum {
+  r0,
+  r1,
+  r2,
+  r3,
+  r4,
+  r5,
+  r6,
+  r7,
+  r8,
+  r9,
+  r10,
+  r11,
+  r12,
+  r13,
+  r14,
+  r15
+} register_t;
 
-typedef uint16_t thumb16_opcode_t;
-
-typedef struct {
-  uint16_t high;
-  uint16_t low;
-} thumb32_opcode_t;
-
-typedef struct {
-  bool is_32bit;
-  union {
-    thumb16_opcode_t thumb16;
-    thumb32_opcode_t thumb32;
-  } opcode;
-} thumb_opcode_t;
-
-typedef uint16_t* instr_seq_t; 
+#define SP r13
+#define LR r14
+#define PC r15
 
 #endif

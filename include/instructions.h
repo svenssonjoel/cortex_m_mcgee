@@ -22,26 +22,66 @@
 /* SOFTWARE.									  */
 /**********************************************************************************/
 
-#ifndef __THUMB_H_
-#define __THUMB_H_
+#ifndef __INSTRUCTIONS_H_
+#define __INSTRUCTIONS_H_
 
-#include <stdint.h>
-
-typedef uint16_t thumb16_opcode_t;
-
-typedef struct {
-  uint16_t high;
-  uint16_t low;
-} thumb32_opcode_t;
-
-typedef struct {
-  bool is_32bit;
-  union {
-    thumb16_opcode_t thumb16;
-    thumb32_opcode_t thumb32;
-  } opcode;
-} thumb_opcode_t;
-
-typedef uint16_t* instr_seq_t; 
+typedef enum {
+  ADC,
+  ADD,
+  ADR,
+  AND,
+  ASR,
+  B,
+  BIC,
+  BKPT,
+  BL,
+  BLX,
+  BX,
+  CMN,
+  CMP,
+  CPS,
+  DMB,
+  DSB,
+  EOR,
+  ISB,
+  LDM,
+  LDR,
+  LDRB,
+  LDRH,
+  LDRSB,
+  LDRSH,
+  LSB,
+  LSL,
+  MOV,
+  MRS,
+  MSR,
+  MUL,
+  MVN,
+  NOP,
+  ORR,
+  POP,
+  PUSH,
+  REV,
+  REV16,
+  REVSH,
+  ROR,
+  RSB,
+  SBC,
+  SEV,
+  STM,
+  STR,
+  STRB,
+  STRH,
+  SUB,
+  SVC,
+  SXTB,
+  SXTH,
+  TST,
+  UXTB,
+  UXTH,
+  WFE,
+  WFI,
+  YIELD
+} M0_instr_t;
 
 #endif
