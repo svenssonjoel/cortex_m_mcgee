@@ -1,7 +1,7 @@
 
 # Cortex M. McGee
 
-ARM Cortex M4 machine code generator
+ARM Cortex M0-4 machine code generator
 
 _WORK IN PROGRESS_
 
