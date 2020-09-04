@@ -22,46 +22,48 @@
 /* SOFTWARE.									  */
 /**********************************************************************************/
 
-#ifndef __THUMB_H_
-#define __THUMB_H_
+#include <thumb.h>
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <instructions.h>
-#include <registers.h>
+#include <stdio.h>
 
-#define IMM5_MASK (uint8_t)0b00011111
-#define IMM3_MASK (uint8_t)0b00000111
-#define IMM2_MASK (uint8_t)0b00000011
+const uint16_t m0_opcode_mov_t1 = 0b0010000000000000;
 
-#define REG_MASK  (uint8_t)0b00000111
 
-typedef uint16_t thumb16_opcode_t;
+int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
+  if (seq->mc == NULL || seq->pos >= seq->size) return 0;
+  
+  if (op.is_32bit && seq->pos < (seq->size -2)) {
+    seq->mc[seq->pos++] = op.opcode.thumb32.high;
+    seq->mc[seq->pos++] = op.opcode.thumb32.low;
+  } else if (!op.is_32bit && seq->pos < (seq->size -1)) {
+    seq->mc[seq->pos++] = op.opcode.thumb16;
+  } else {
+    return 0;
+  }
+  return 1;
+}
 
-typedef struct {
-  uint16_t high;
-  uint16_t low;
-} thumb32_opcode_t;
 
-typedef struct {
-  bool is_32bit;
-  union {
-    thumb16_opcode_t thumb16;
-    thumb32_opcode_t thumb32;
-  } opcode;
-} thumb_opcode_t;
+thumb_opcode_t m0_lsl_imm(reg_t rm, reg_t rd, uint8_t imm5) {
+  (void)rm;
+  (void)rd;
+  (void)imm5;
+  thumb_opcode_t op;
+  return op;
+}
 
-typedef struct {
-  uint16_t *mc;
-  unsigned int size;
-  unsigned int pos;
-} instr_seq_t;
+thumb_opcode_t m0_lsr_imm(reg_t rm, reg_t rd, uint8_t imm5) {
+  (void)rm;
+  (void)rd;
+  (void)imm5;
+  thumb_opcode_t op;
+  return op;
+}
 
-extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
-
-extern thumb_opcode_t m0_lsl_imm(reg_t rm, reg_t rd, uint8_t imm5);
-extern thumb_opcode_t m0_lsr_imm(reg_t rm, reg_t rd, uint8_t imm5);
-extern thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8);
-
- 
-#endif
+thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8) {
+  thumb_opcode_t op;
+  op.is_32bit = false;
+  op.opcode.thumb16 = m0_opcode_mov_t1 | ((rd & REG_MASK) << 8) | imm8;
+  return op;
+}
+  
