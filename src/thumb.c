@@ -28,7 +28,6 @@
 
 const uint16_t m0_opcode_mov_t1 = 0b0010000000000000;
 
-
 int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   if (seq->mc == NULL || seq->pos >= seq->size) return 0;
   
