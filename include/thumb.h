@@ -25,6 +25,7 @@
 #ifndef __THUMB_H_
 #define __THUMB_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <instructions.h>
 #include <registers.h>
@@ -32,6 +33,8 @@
 #define IMM5_MASK (uint8_t)0b00011111
 #define IMM3_MASK (uint8_t)0b00000111
 #define IMM2_MASK (uint8_t)0b00000011
+
+#define REG_MASK  (uint8_t)0b00000111
 
 typedef uint16_t thumb16_opcode_t;
 
@@ -48,12 +51,11 @@ typedef struct {
   } opcode;
 } thumb_opcode_t;
 
-typedef uint16_t* instr_seq_t;
+typedef uint16_t instr_seq_t;
 
+extern thumb_opcode_t m0_lsl_imm(reg_t rm, reg_t rd, uint8_t imm5);
+extern thumb_opcode_t m0_lsr_imm(reg_t rm, reg_t rd, uint8_t imm5);
+extern thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8);
 
-thumb_opcode_t m0_lsl_imm(uint8_t imm, register_t rm, register_t rd);
-thumb_opcode_t m0_lsr_imm(uint8_t imm, register_t rm, register_t rd);
-
-
-
+ 
 #endif
