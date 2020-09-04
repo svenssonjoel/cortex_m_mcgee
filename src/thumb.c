@@ -37,11 +37,11 @@ uint16_t byte_reverse(uint16_t in) {
 int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   if (seq->mc == NULL || seq->pos >= seq->size) return 0;
   
-  if (op.is_32bit && seq->pos < (seq->size -2)) {
-    seq->mc[seq->pos++] = byte_reverse(op.opcode.thumb32.high);
-    seq->mc[seq->pos++] = byte_reverse(op.opcode.thumb32.low);
-  } else if (!op.is_32bit && seq->pos < (seq->size -1)) {
-    seq->mc[seq->pos++] = byte_reverse(op.opcode.thumb16);
+  if (op.is_32bit && seq->pos <= (seq->size -2)) {
+    seq->mc[seq->pos++] = op.opcode.thumb32.high;
+    seq->mc[seq->pos++] = op.opcode.thumb32.low;
+  } else if (!op.is_32bit && seq->pos <= (seq->size -1)) {
+    seq->mc[seq->pos++] = op.opcode.thumb16;
   } else {
     return 0;
   }
