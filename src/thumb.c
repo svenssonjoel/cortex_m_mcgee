@@ -28,14 +28,20 @@
 
 const uint16_t m0_opcode_mov_t1 = 0b0010000000000000;
 
+uint16_t byte_reverse(uint16_t in) {
+  uint8_t a = in & 0xFF;
+  uint8_t b = (in >> 8) & 0xFF;
+  uint16_t out = (uint16_t)b | ((uint16_t)a) << 8;
+}
+
 int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   if (seq->mc == NULL || seq->pos >= seq->size) return 0;
   
   if (op.is_32bit && seq->pos < (seq->size -2)) {
-    seq->mc[seq->pos++] = op.opcode.thumb32.high;
-    seq->mc[seq->pos++] = op.opcode.thumb32.low;
+    seq->mc[seq->pos++] = byte_reverse(op.opcode.thumb32.high);
+    seq->mc[seq->pos++] = byte_reverse(op.opcode.thumb32.low);
   } else if (!op.is_32bit && seq->pos < (seq->size -1)) {
-    seq->mc[seq->pos++] = op.opcode.thumb16;
+    seq->mc[seq->pos++] = byte_reverse(op.opcode.thumb16);
   } else {
     return 0;
   }
