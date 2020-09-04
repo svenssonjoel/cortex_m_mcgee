@@ -8,10 +8,6 @@ _WORK IN PROGRESS_
 
 
 
-
-
-
-
 # Debug on stm32f4-discovery
 
 - debug.sh script starts up OpenOCD and connects to the board
@@ -20,3 +16,9 @@ _WORK IN PROGRESS_
   - Issue command `target extended-remote localhost:3333` or short version `tar ext :3333`
   
 - Telnet `telnet localhost 4444`
+
+
+# To figure out
+
+- Byte ordering in instruction stream (instructions are either 16 or 32 bits).
+- Generation of elf header and sections.
