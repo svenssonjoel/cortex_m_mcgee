@@ -19,3 +19,4 @@ _WORK IN PROGRESS_
 - Start gdb (`arm-none-eabi-gdb`)
   - Issue command `target extended-remote localhost:3333` or short version `tar ext :3333`
   
+- Telnet `telnet localhost 4444`
