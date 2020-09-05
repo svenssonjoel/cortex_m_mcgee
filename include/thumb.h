@@ -71,6 +71,8 @@ extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
 
 extern thumb_opcode_t m0_add_low(reg_t rd, reg_t rn, reg_t rm);
 extern thumb_opcode_t m0_add_any(reg_t rd, reg_t rm);
+extern thumb_opcode_t m0_asr_imm(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_asr_low(reg_t rd, reg_t rm);
 extern thumb_opcode_t m0_lsl_imm(reg_t rd, reg_t rm, uint8_t imm5);
 extern thumb_opcode_t m0_lsl_low(reg_t rd, reg_t rm);
 extern thumb_opcode_t m0_lsr_imm(reg_t rd, reg_t rm, uint8_t imm5);

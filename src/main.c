@@ -34,14 +34,17 @@ int main(int argc, char **argv) {
   (void) argc;
   (void) argv;
 
-  uint16_t instrs[10];
+  uint16_t instrs[13];
   instr_seq_t seq;
   seq.size = 10;
   seq.pos  = 0;
   seq.mc = instrs;
   
-  emit_opcode(&seq, m0_mov_imm(r0, 0xFF));
-  emit_opcode(&seq, m0_mov_imm(r1, 0xDE));
+  emit_opcode(&seq, m0_mov_imm(r0, 2));      
+  emit_opcode(&seq, m0_mov_imm(r1, 3));       
+  emit_opcode(&seq, m0_add_low(r2, r1, r0)); 
+  emit_opcode(&seq, m0_add_any(r0, r2)); 
+  emit_opcode(&seq, m0_asr_imm(r0, r0, 1)); 
   emit_opcode(&seq, m0_mov_imm(r2, 0xAD));
   emit_opcode(&seq, m0_mov_imm(r3, 0x0F));
   emit_opcode(&seq, m0_mov_imm(r4, 0xF0));
@@ -57,7 +60,7 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  if (fwrite(seq.mc,sizeof(uint16_t),10,fp) < 10) {
+  if (fwrite(seq.mc,sizeof(uint16_t),13,fp) < 13) {
     printf("Error writing file\n");
     return 0;
   }
