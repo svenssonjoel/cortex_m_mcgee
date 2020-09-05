@@ -37,10 +37,10 @@ uint16_t byte_reverse(uint16_t in) {
 int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   if (seq->mc == NULL || seq->pos >= seq->size) return 0;
   
-  if (op.is_32bit && seq->pos <= (seq->size -2)) {
+  if (op.kind == thumb32 && seq->pos <= (seq->size -2)) {
     seq->mc[seq->pos++] = op.opcode.thumb32.high;
     seq->mc[seq->pos++] = op.opcode.thumb32.low;
-  } else if (!op.is_32bit && seq->pos <= (seq->size -1)) {
+  } else if (op.kind == thumb16 && seq->pos <= (seq->size -1)) {
     seq->mc[seq->pos++] = op.opcode.thumb16;
   } else {
     return 0;
@@ -67,8 +67,12 @@ thumb_opcode_t m0_lsr_imm(reg_t rm, reg_t rd, uint8_t imm5) {
 
 thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8) {
   thumb_opcode_t op;
-  op.is_32bit = false;
-  op.opcode.thumb16 = m0_opcode_mov_t1 | ((rd & REG_MASK) << 8) | imm8;
+  if (rd > r7) {
+    op.kind = encode_error;
+    return op;
+  }
+  op.kind = thumb16;
+  op.opcode.thumb16 = m0_opcode_mov_t1 | ((rd & REG_LOW_MASK) << 8) | imm8;
   return op;
 }
   

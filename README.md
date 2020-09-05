@@ -41,6 +41,11 @@ _WORK IN PROGRESS_
 
   - Run: `resume`
   - Step through code: `step`
+
+# Quick debug with xxd
+
+- View binary file contents as HEX values: `xxd filename`
+- View binary file contents as BIN values: `xxd -b filename`
 	
 # To figure out
 
