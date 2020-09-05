@@ -8,18 +8,24 @@ _WORK IN PROGRESS_
 
 
 
-# Debug on stm32f4-discovery
+# Debug on stm32f4-discovery GDB
 
-- debug.sh script starts up OpenOCD and connects to the board
+- Run the `debug.sh` to start OpenOCD and connect to the board
 
 - Start gdb (`arm-none-eabi-gdb`)
   - Issue command `target extended-remote localhost:3333` or short version `tar ext :3333`
   
+# Debug on stm32f4-discovery Telnet
+
+- Run the `debug.sh` to start OpenOCD and connect to the board
+
 - Telnet `telnet localhost 4444`
   - load binary code into memory with command: `load_image filename address`
     For example: `load_image out.bin 0x20000000`
-  - Disassemble loaded code: 
-    ```
+  
+  - Disassemble loaded code `arm disassemble address number-of-instructions`
+     Example:
+	```
 	> arm disassemble 0x20000000 10
 	0x20000000  0x20ff    	MOVS	r0, #0xff
 	0x20000002  0x21de    	MOVS	r1, #0xde
