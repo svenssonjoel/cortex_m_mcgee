@@ -22,61 +22,47 @@
 /* SOFTWARE.									  */
 /**********************************************************************************/
 
-#ifndef __THUMB_H_
-#define __THUMB_H_
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <instructions.h>
-#include <registers.h>
+#include <thumb.h>
 
-#define IMM5_MASK (uint8_t)0b00011111
-#define IMM3_MASK (uint8_t)0b00000111
-#define IMM2_MASK (uint8_t)0b00000011
+const char *fn = "out.bin";
 
-#define REG_LOW_MASK      (uint8_t)0b00000111
-#define REG_MASK          (uint8_t)0b00001111
-#define REG_HIGH_BIT_MASK (uint8_t)0b00001000
+int main(int argc, char **argv) {
+  (void) argc;
+  (void) argv;
 
-typedef uint16_t thumb16_opcode_t;
+  uint16_t instrs[10];
+  instr_seq_t seq;
+  seq.size = 10;
+  seq.pos  = 0;
+  seq.mc = instrs;
+  
+  emit_opcode(&seq, m0_mov_imm(r0, 0xFF));
+  emit_opcode(&seq, m0_mov_imm(r1, 0xDE));
+  emit_opcode(&seq, m0_mov_imm(r2, 0xAD));
+  emit_opcode(&seq, m0_mov_imm(r3, 0x0F));
+  emit_opcode(&seq, m0_mov_imm(r4, 0xF0));
+  emit_opcode(&seq, m0_mov_imm(r5, 0xAB));
+  emit_opcode(&seq, m0_mov_imm(r6, 0xDC));
+  emit_opcode(&seq, m0_mov_imm(r7, 0x12));
+  emit_opcode(&seq, m0_mov_imm(r8, 0x43));
+  emit_opcode(&seq, m0_mov_imm(r9, 0x99));
 
-typedef struct {
-  uint16_t high;
-  uint16_t low;
-} thumb32_opcode_t;
+  FILE *fp = fopen(fn, "w");
+  if (!fp)  {
+    printf("Error opening file %s\n", fn);
+    return 0;
+  }
 
-typedef enum {
-  thumb16,
-  thumb32,
-  register_out_of_range,
-  encode_error
-} thumb_opcode_kind;
+  if (fwrite(seq.mc,sizeof(uint16_t),10,fp) < 10) {
+    printf("Error writing file\n");
+    return 0;
+  }
 
-typedef struct {
-  thumb_opcode_kind kind;
-  union {
-    thumb16_opcode_t thumb16;
-    thumb32_opcode_t thumb32;
-    int error_code;
-  } opcode;
-} thumb_opcode_t;
-
-typedef struct {
-  uint16_t *mc;
-  unsigned int size;
-  unsigned int pos;
-} instr_seq_t;
-
-extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
-
-extern thumb_opcode_t m0_add_low(reg_t rd, reg_t rn, reg_t rm);
-extern thumb_opcode_t m0_add_any(reg_t rd, reg_t rm);
-extern thumb_opcode_t m0_lsl_imm(reg_t rd, reg_t rm, uint8_t imm5);
-extern thumb_opcode_t m0_lsl_low(reg_t rd, reg_t rm);
-extern thumb_opcode_t m0_lsr_imm(reg_t rd, reg_t rm, uint8_t imm5);
-extern thumb_opcode_t m0_lsr_low(reg_t rd, reg_t rm);
-extern thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8);
-extern thumb_opcode_t m0_mov_any(reg_t rd, reg_t rm);
-extern thumb_opcode_t m0_mov_low(reg_t rd, reg_t rm);
-
-#endif
+  fclose(fp);
+  return 1;
+ 
+}
