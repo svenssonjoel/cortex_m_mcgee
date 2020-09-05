@@ -34,8 +34,9 @@
 #define IMM3_MASK (uint8_t)0b00000111
 #define IMM2_MASK (uint8_t)0b00000011
 
-#define REG_LOW_MASK  (uint8_t)0b00000111
-#define REG_FULL_MASK (uint8_t)0b00001111
+#define REG_LOW_MASK      (uint8_t)0b00000111
+#define REG_MASK          (uint8_t)0b00001111
+#define REG_HIGH_BIT_MASK (uint8_t)0b00001000
 
 typedef uint16_t thumb16_opcode_t;
 
@@ -70,6 +71,6 @@ extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
 extern thumb_opcode_t m0_lsl_imm(reg_t rm, reg_t rd, uint8_t imm5);
 extern thumb_opcode_t m0_lsr_imm(reg_t rm, reg_t rd, uint8_t imm5);
 extern thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8);
-
- 
+extern thumb_opcode_t m0_mov_any(reg_t rm, reg_t rd);
+extern thumb_opcode_t m0_mov_low(reg_t rm, reg_t rd);
 #endif
