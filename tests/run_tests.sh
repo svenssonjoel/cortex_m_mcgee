@@ -13,6 +13,7 @@ done
 
 echo "STARTING OPENOCD IN BACKGROUND:"
 openocd -f stm32f407g.cfg &
+PID=$!
 
 echo "PERFORMING TESTS:"
 
@@ -41,6 +42,9 @@ done
 
 echo Tests passed: $success_count
 echo Tests failed: $fail_count
+
+kill -9 $PID
+
 
 if [ $fail_count -gt 0 ]
 then
