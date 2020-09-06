@@ -28,21 +28,35 @@
 
 #include <thumb.h>
 
-const char *fn = "out.bin";
+#include <test_expect.h>
+
+const char *testname = "test0";
+const char *fn = "test0.bin";
 
 int main(int argc, char **argv) {
   (void) argc;
   (void) argv;
 
+  if (!test_expect_init(testname)) {
+    printf("error starting initializing test_expect\n");
+    return 0;
+  }
+  
   uint16_t instrs[13];
   instr_seq_t seq;
   seq.size = 10;
   seq.pos  = 0;
   seq.mc = instrs;
   
-  emit_opcode(&seq, m0_mov_imm(r0, 2));      
-  emit_opcode(&seq, m0_mov_imm(r1, 3));       
-  emit_opcode(&seq, m0_add_low(r2, r1, r0)); 
+  emit_opcode(&seq, m0_mov_imm(r0, 2));
+  test_step();
+  test_assert_reg("r0", "0x00000002");
+  emit_opcode(&seq, m0_mov_imm(r1, 3));
+  test_step();
+  test_assert_reg("r1", "0x00000003");
+  emit_opcode(&seq, m0_add_low(r2, r1, r0));
+  test_step();
+  test_assert_reg("r2", "0x00000005");
   emit_opcode(&seq, m0_add_any(r0, r2)); 
   emit_opcode(&seq, m0_asr_imm(r0, r0, 1)); 
   emit_opcode(&seq, m0_mov_imm(r2, 0xAD));
