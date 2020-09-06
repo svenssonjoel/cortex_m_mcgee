@@ -68,6 +68,9 @@ int main(int argc, char **argv) {
   emit_opcode(&seq, m0_mov_imm(r8, 0x43));
   emit_opcode(&seq, m0_mov_imm(r9, 0x99));
 
+
+  test_expect_shutdown();
+  
   FILE *fp = fopen(fn, "w");
   if (!fp)  {
     printf("Error opening file %s\n", fn);

@@ -35,17 +35,17 @@ FILE* out = NULL;
 void output_startup(char *fn_bin) {
   fprintf(out, "#!/usr/bin/expect -f\n");
   fprintf(out, "set timeout 60\n");
-  fprintf(out, "spawn telnet localhost 4444\n");
+  fprintf(out, "spawn telnet -e ~ localhost 4444\n");
   fprintf(out, "expect -re \"> ?$\"\n");
   fprintf(out, "send -- \"reset init\\n\"\n");
   fprintf(out, "expect -re \"> ?$\"\n");
   fprintf(out, "send -- \"reg pc 0x20000000\\n\"\n");
   fprintf(out,
 	  "expect {\n"
-	  "    \"pc*0x20000000*\n\" {\n"
+	  "    \"pc*0x20000000*\\n\" {\n"
 	  "        puts \"PC set successfully\\n\"\n"
 	  "    }\n"
-	  "    \"pc*0x*\n\" {\n"
+	  "    \"pc*0x*\\n\" {\n"
 	  "        puts \"Error setting pc\\n\"\n"
 	  "        exit 1\n"
 	  "    }\n"
@@ -64,14 +64,14 @@ void test_assert_reg(char *reg, char *value) {
   fprintf(out, "send -- \"reg %s\\n\"\n", reg);
   fprintf(out,
 	  "expect {\n"
-	  "    \"%s*%s*\n\" {\n"
+	  "    \"%s*%s*\\n\" {\n"
 	  "        puts \"%s set successfully\\n\"\n"
 	  "    }\n"
-	  "    \"pc*0x*\n\" {\n"
+	  "    \"%s*0x*\\n\" {\n"
 	  "        puts \"Error setting %s\\n\"\n"
 	  "        exit 1\n"
 	  "    }\n"
-	  "}\n", reg, value, reg, reg);
+	  "}\n", reg, value, reg, reg, reg);
   fprintf(out, "expect -re \"> ?$\"\n");
 }
 
@@ -104,5 +104,15 @@ int test_expect_init(const char *testname) {
   return 1;
 }
 
+void test_expect_shutdown(void) {
 
+  fprintf(out, "send -- \"~\" \n");
+  fprintf(out, "expect \"telnet>\"\n");
+  fprintf(out, "send -- \"close\\n\"\n");
+  fprintf(out, "expect eof\n");
+  fprintf(out, "wait\n");
+
+  if(out)
+    fclose(out);
+}
 

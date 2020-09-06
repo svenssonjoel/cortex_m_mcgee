@@ -28,6 +28,6 @@
 extern void test_step(void);
 extern void test_assert_reg(char *reg, char *value);
 extern int test_expect_init(const char *testname);
-
+extern void test_expect_shutdown(void);
 
 #endif
