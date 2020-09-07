@@ -87,6 +87,13 @@ int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   return 1;
 }
 
+thumb_opcode_t thumb16_opcode(uint16_t opcode) {
+  thumb_opcode_t op;
+  op.kind = thumb16;
+  op.opcode.thumb16 = opcode;
+  return op;
+}
+
 thumb_opcode_t thumb16_opcode_imm7(uint16_t opcode, uint8_t imm7) {
   thumb_opcode_t op;
   op.kind = thumb16;
@@ -202,7 +209,6 @@ thumb_opcode_t thumb16_opcode_two_regs_any(uint16_t opcode, reg_t r1, reg_t r2) 
 /* ************************************************************ 
    M0 OpCodes   (GENERATED CODE)
    ************************************************************ */
-
 thumb_opcode_t m0_adc_low(reg_t rdn, reg_t rm) {
   return thumb16_opcode_two_regs_low(16704, rdn, rm);
 }
@@ -257,6 +263,66 @@ thumb_opcode_t m0_blx_any(reg_t rdn) {
 
 thumb_opcode_t m0_bx_any(reg_t rdn) {
   return thumb16_opcode_one_reg_any(18176, rdn);
+}
+
+thumb_opcode_t m0_beq_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(53248, imm8);
+}
+
+thumb_opcode_t m0_bne_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(53504, imm8);
+}
+
+thumb_opcode_t m0_bcs_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(53760, imm8);
+}
+
+thumb_opcode_t m0_bcc_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(54016, imm8);
+}
+
+thumb_opcode_t m0_bmi_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(54272, imm8);
+}
+
+thumb_opcode_t m0_bpl_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(54528, imm8);
+}
+
+thumb_opcode_t m0_bvs_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(54784, imm8);
+}
+
+thumb_opcode_t m0_bvc_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(55040, imm8);
+}
+
+thumb_opcode_t m0_bhi_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(55296, imm8);
+}
+
+thumb_opcode_t m0_bls_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(55552, imm8);
+}
+
+thumb_opcode_t m0_bge_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(55808, imm8);
+}
+
+thumb_opcode_t m0_blt_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(56064, imm8);
+}
+
+thumb_opcode_t m0_bgt_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(56320, imm8);
+}
+
+thumb_opcode_t m0_ble_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(56576, imm8);
+}
+
+thumb_opcode_t m0_bal_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(56832, imm8);
 }
 
 thumb_opcode_t m0_cbnz_f_imm5(reg_t rdn, uint8_t imm5) {
@@ -367,8 +433,40 @@ thumb_opcode_t m0_mvn_low(reg_t rdn, reg_t rm) {
   return thumb16_opcode_two_regs_low(17344, rdn, rm);
 }
 
+thumb_opcode_t m0_nop(void) {
+  return thumb16_opcode(48896);
+}
+
 thumb_opcode_t m0_orr_low(reg_t rdn, reg_t rm) {
   return thumb16_opcode_two_regs_low(17152, rdn, rm);
+}
+
+thumb_opcode_t m0_pop(uint8_t imm8) {
+  return thumb16_opcode_imm8(48128, imm8);
+}
+
+thumb_opcode_t m0_pop_lr(uint8_t imm8) {
+  return thumb16_opcode_imm8(48384, imm8);
+}
+
+thumb_opcode_t m0_push(uint8_t imm8) {
+  return thumb16_opcode_imm8(46080, imm8);
+}
+
+thumb_opcode_t m0_push_lr(uint8_t imm8) {
+  return thumb16_opcode_imm8(46336, imm8);
+}
+
+thumb_opcode_t m0_rev_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(47616, rdn, rm);
+}
+
+thumb_opcode_t m0_rev16_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(47680, rdn, rm);
+}
+
+thumb_opcode_t m0_revsh_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(47808, rdn, rm);
 }
 
 thumb_opcode_t m0_ror_low(reg_t rdn, reg_t rm) {
@@ -423,6 +521,43 @@ thumb_opcode_t m0_sub_sp_imm(uint8_t imm7) {
   return thumb16_opcode_imm7(45184, imm7);
 }
 
+thumb_opcode_t m0_svc_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(57088, imm8);
+}
+
+thumb_opcode_t m0_sxtb_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(45632, rdn, rm);
+}
+
+thumb_opcode_t m0_sxth_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(45568, rdn, rm);
+}
+
 thumb_opcode_t m0_tst_low(reg_t rdn, reg_t rm) {
   return thumb16_opcode_two_regs_low(16896, rdn, rm);
 }
+
+thumb_opcode_t m0_udf_imm8(uint8_t imm8) {
+  return thumb16_opcode_imm8(56832, imm8);
+}
+
+thumb_opcode_t m0_uxtb_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(45760, rdn, rm);
+}
+
+thumb_opcode_t m0_uxth_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(45696, rdn, rm);
+}
+
+thumb_opcode_t m0_wfe(void) {
+  return thumb16_opcode(48928);
+}
+
+thumb_opcode_t m0_wfi(void) {
+  return thumb16_opcode(48944);
+}
+
+thumb_opcode_t m0_yield(void) {
+  return thumb16_opcode(48912);
+}
+

@@ -26,6 +26,7 @@
 #include <stdint.h>
 
 typedef enum {
+  nothing,
   imm7,
   imm8,
   one_reg_low_imm5,
@@ -66,6 +67,21 @@ const thumb16_opcode opcodes[] =
    {"m0_bkpt_imm8"  , 0b1011111000000000, imm8},
    {"m0_blx_any"    , 0b0100011110000000, one_reg_any},
    {"m0_bx_any"     , 0b0100011100000000, one_reg_any},
+   {"m0_beq_imm8"   , 0b1101000000000000, imm8},
+   {"m0_bne_imm8"   , 0b1101000100000000, imm8},
+   {"m0_bcs_imm8"   , 0b1101001000000000, imm8},
+   {"m0_bcc_imm8"   , 0b1101001100000000, imm8},
+   {"m0_bmi_imm8"   , 0b1101010000000000, imm8},
+   {"m0_bpl_imm8"   , 0b1101010100000000, imm8},
+   {"m0_bvs_imm8"   , 0b1101011000000000, imm8},
+   {"m0_bvc_imm8"   , 0b1101011100000000, imm8},
+   {"m0_bhi_imm8"   , 0b1101100000000000, imm8},
+   {"m0_bls_imm8"   , 0b1101100100000000, imm8},
+   {"m0_bge_imm8"   , 0b1101101000000000, imm8},
+   {"m0_blt_imm8"   , 0b1101101100000000, imm8},
+   {"m0_bgt_imm8"   , 0b1101110000000000, imm8},
+   {"m0_ble_imm8"   , 0b1101110100000000, imm8},
+   {"m0_bal_imm8"   , 0b1101111000000000, imm8},
    {"m0_cbnz_f_imm5", 0b1011101100000000, one_reg_low_imm5},
    {"m0_cbnz_n_imm5", 0b1011100100000000, one_reg_low_imm5},
    {"m0_cbz_f_imm5" , 0b1011001100000000, one_reg_low_imm5},
@@ -93,7 +109,15 @@ const thumb16_opcode opcodes[] =
    {"m0_mov_low"    , 0b0000000000000000, two_regs_low},
    {"m0_mul_low"    , 0b0100001101000000, two_regs_low},
    {"m0_mvn_low"    , 0b0100001111000000, two_regs_low},
+   {"m0_nop"        , 0b1011111100000000, nothing},
    {"m0_orr_low"    , 0b0100001100000000, two_regs_low},
+   {"m0_pop"        , 0b1011110000000000, imm8}, 
+   {"m0_pop_lr"     , 0b1011110100000000, imm8},  
+   {"m0_push"       , 0b1011010000000000, imm8},
+   {"m0_push_lr"    , 0b1011010100000000, imm8},
+   {"m0_rev_low"    , 0b1011101000000000, two_regs_low},
+   {"m0_rev16_low"  , 0b1011101001000000, two_regs_low},
+   {"m0_revsh_low"  , 0b1011101011000000, two_regs_low},
    {"m0_ror_low"    , 0b0100000111000000, two_regs_low},
    {"m0_rsb_low"    , 0b0100001001000000, two_regs_low},
    {"m0_str_imm5"   , 0b0110000000000000, two_regs_low_imm5},
@@ -107,12 +131,24 @@ const thumb16_opcode opcodes[] =
    {"m0_sub_imm3"   , 0b0001111000000000, two_regs_low_imm3},
    {"m0_sub_imm8"   , 0b0011100000000000, one_reg_low_imm8},
    {"m0_sub_sp_imm" , 0b1011000010000000, imm7},
+   {"m0_svc_imm8"   , 0b1101111100000000, imm8},
+   {"m0_sxtb_low"   , 0b1011001001000000, two_regs_low},
+   {"m0_sxth_low"   , 0b1011001000000000, two_regs_low},
    {"m0_tst_low"    , 0b0100001000000000, two_regs_low},
+   {"m0_udf_imm8"   , 0b1101111000000000, imm8},
+   {"m0_uxtb_low"   , 0b1011001011000000, two_regs_low},
+   {"m0_uxth_low"   , 0b1011001010000000, two_regs_low},
+   {"m0_wfe"        , 0b1011111100100000, nothing},
+   {"m0_wfi"        , 0b1011111100110000, nothing},
+   {"m0_yield"      , 0b1011111100010000, nothing},
    {NULL, 0, 0}};
 
 
 void print_extern_decl(thumb16_opcode op) {
   switch(op.format) {
+  case nothing:
+    printf("extern thumb_opcode_t %s(void);\n", op.name);
+    break;
   case imm7:
     printf("extern thumb_opcode_t %s(uint8_t imm7);\n", op.name);
     break;
@@ -152,6 +188,11 @@ void print_extern_decl(thumb16_opcode op) {
 void print_opcode(thumb16_opcode op) {
 
   switch(op.format) {
+  case nothing:
+    printf("thumb_opcode_t %s(void) {\n", op.name);
+    printf("  return thumb16_opcode(%u);\n", op.opcode);
+    printf("}\n\n");
+    break;
   case imm7:
     printf("thumb_opcode_t %s(uint8_t imm7) {\n", op.name);
     printf("  return thumb16_opcode_imm7(%u, imm7);\n", op.opcode);
@@ -208,10 +249,34 @@ void print_opcode(thumb16_opcode op) {
   } 
 }
 
+
+void unique_ops() {
+
+  int i = 0;
+
+  while (opcodes[i].name) {
+    int j = i+1;
+    while (opcodes[j].name) {
+      if (i != j && opcodes[i].opcode == opcodes[j].opcode) {
+	printf("WARNING!\n");
+	printf("opcodes at indices %d and %d are the same\n", i, j);
+	printf("%d: %s :  %u \n", i, opcodes[i].name, opcodes[i].opcode);
+	printf("%d: %s :  %u \n", j, opcodes[j].name, opcodes[j].opcode);
+	printf("\n");
+      }
+      j++;
+    }
+    i++;
+  }
+}
+
+
 int main(int argc, char **argv) {
 
   int i = 0;
 
+  unique_ops();
+  
   i = 0;
   while (opcodes[i].name) {
     print_extern_decl(opcodes[i++]);
