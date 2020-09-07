@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
   
   uint16_t instrs[13];
   instr_seq_t seq;
-  seq.size = 10;
+  seq.size = 13;
   seq.pos  = 0;
   seq.mc = instrs;
   
@@ -59,14 +59,14 @@ int main(int argc, char **argv) {
   test_assert_reg("r2", "0x00000005");
   emit_opcode(&seq, m0_add_any(r0, r2)); 
   emit_opcode(&seq, m0_asr_imm(r0, r0, 1)); 
-  emit_opcode(&seq, m0_mov_imm(r2, 0xAD));
-  emit_opcode(&seq, m0_mov_imm(r3, 0x0F));
-  emit_opcode(&seq, m0_mov_imm(r4, 0xF0));
-  emit_opcode(&seq, m0_mov_imm(r5, 0xAB));
+  emit_opcode(&seq, m0_mov_imm(r2, 0xDE));
+  emit_opcode(&seq, m0_mov_imm(r3, 0xAD));
+  emit_opcode(&seq, m0_mov_imm(r4, 0xBE));
+  emit_opcode(&seq, m0_mov_imm(r5, 0xEF));
   emit_opcode(&seq, m0_mov_imm(r6, 0xDC));
   emit_opcode(&seq, m0_mov_imm(r7, 0x12));
-  emit_opcode(&seq, m0_mov_imm(r8, 0x43));
-  emit_opcode(&seq, m0_mov_imm(r9, 0x99));
+    emit_opcode(&seq, m0_bl(2));
+  //emit_opcode(&seq, m0_mov_imm(r9, 0x99));
 
 
   test_expect_shutdown();

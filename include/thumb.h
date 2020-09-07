@@ -36,7 +36,10 @@
 #define IMM3_MASK (uint8_t)0b00000111
 #define IMM2_MASK (uint8_t)0b00000011
 
+#define IMM10_MASK (uint16_t)0b0000001111111111
 #define IMM11_MASK (uint16_t)0b0000011111111111
+
+#define IMM25_MASK (uint32_t)0x1FFFFFF
 
 #define REG_LOW_MASK      (uint8_t)0b00000111
 #define REG_MASK          (uint8_t)0b00001111
@@ -72,6 +75,9 @@ typedef struct {
 } instr_seq_t;
 
 extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
+
+/* handcoded */
+extern thumb_opcode_t m0_bl(int32_t offset);
 
 /* Generated code */
 extern thumb_opcode_t m0_adc_low(reg_t rdn, reg_t rm);
