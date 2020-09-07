@@ -67,32 +67,6 @@
    be to prefix them with the m<n> where their support is introduced. 
 */
 
-const uint16_t m0_opcode_adc_low    = 0b0100000101000000; /* adc low_reg low_reg */
-const uint16_t m0_opcode_add_imm3   = 0b0001110000000000; /* add low_reg low_reg imm3 */
-const uint16_t m0_opcode_add_imm8   = 0b0011000000000000; /* add low_reg imm8 */
-const uint16_t m0_opcode_add_low    = 0b0001100000000000; /* add low_reg low_reg low_reg */
-const uint16_t m0_opcode_add_any    = 0b0100010000000000; /* add any_reg any_reg */
-const uint16_t m0_opcode_and_low    = 0b0100000000000000; /* and low_reg low_reg */
-const uint16_t m0_opcode_asr_imm    = 0b0001000000000000;
-const uint16_t m0_opcode_asr_low    = 0b0100000100000000;
-const uint16_t m0_opcode_cmn_low    = 0b0100001011000000; /* cmn low_reg low_reg */
-const uint16_t m0_opcode_cmp_imm8   = 0b0010100000000000; /* cmp low_reg imm8 */
-const uint16_t m0_opcode_cmp_low    = 0b0100001010000000; /* cmp low_reg low_reg */
-const uint16_t m0_opcode_cmp_any    = 0b0100010100000000; /* cmp any_reg any_reg */
-const uint16_t m0_opcode_eor_low    = 0b0100000001000000; /* eor low_reg low_reg */
-const uint16_t m0_opcode_lsl_imm    = 0b0000000000000000;
-const uint16_t m0_opcode_lsl_low    = 0b0100000010000000;
-const uint16_t m0_opcode_lsr_imm    = 0b0000100000000000;
-const uint16_t m0_opcode_lsr_low    = 0b0100000011000000;
-const uint16_t m0_opcode_mov_imm    = 0b0010000000000000;
-const uint16_t m0_opcode_mov_any    = 0b0100011000000000; /* mov any_reg any_reg */
-const uint16_t m0_opcode_mov_low    = 0b0000000000000000; /* mov low_reg low_reg */
-const uint16_t m0_opcode_sub_low    = 0b0001101000000000; /* sub low_reg low_reg low_reg */
-const uint16_t m0_opcode_sub_imm3   = 0b0001111000000000; /* sub low_reg low_reg imm3 */
-const uint16_t m0_opcode_sub_imm8   = 0b0011100000000000; /* sub low_reg imm8 */
-const uint16_t m0_opcode_sub_sp_imm = 0b1011000010000000; /* sub sp sp imm7 */
-
-
 uint16_t byte_reverse(uint16_t in) {
   uint8_t a = in & 0xFF;
   uint8_t b = (in >> 8) & 0xFF;
@@ -197,101 +171,97 @@ thumb_opcode_t thumb16_opcode_two_regs_any(uint16_t opcode, reg_t r1, reg_t r2) 
 
 
 /* ************************************************************ 
-   M0 OpCodes
+   M0 OpCodes   (GENERATED CODE)
    ************************************************************ */ 
 
-thumb_opcode_t m0_adc_low(reg_t rd, reg_t r) {
-  return thumb16_opcode_two_regs_low(m0_opcode_adc_low, rd, r);
+thumb_opcode_t m0_adc_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(16704, rdn, rm);
+}
+
+thumb_opcode_t m0_add_imm3(reg_t rd, reg_t rm, uint8_t imm3) {
+  return thumb16_opcode_two_regs_low_imm3(7168, rd, rm, imm3);
+}
+
+thumb_opcode_t m0_add_imm8(reg_t rdn, uint8_t imm8) {
+  return thumb16_opcode_one_reg_low_imm8(12288, rdn, imm8);
 }
 
 thumb_opcode_t m0_add_low(reg_t rd, reg_t rn, reg_t rm) {
-  return thumb16_opcode_three_regs_low(m0_opcode_add_low, rd, rn, rm);
+  return thumb16_opcode_three_regs_low(6144, rd, rn, rm);
 }
 
-thumb_opcode_t m0_add_any(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_any(m0_opcode_add_any, rd, rm);
+thumb_opcode_t m0_add_any(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_any(17408, rdn, rm);
 }
 
-thumb_opcode_t m0_add_imm3(reg_t rd, reg_t r, uint8_t imm3) {
-  return thumb16_opcode_two_regs_low_imm3(m0_opcode_add_imm3, rd, r, imm3);
-}
-
-thumb_opcode_t m0_add_imm8(reg_t rd, uint8_t imm8) {
-  return thumb16_opcode_one_reg_low_imm8(m0_opcode_add_imm8, rd, imm8);
-}
-
-thumb_opcode_t m0_and_low(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_and_low, rd, rm);
+thumb_opcode_t m0_and_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(16384, rdn, rm);
 }
 
 thumb_opcode_t m0_asr_imm(reg_t rd, reg_t rm, uint8_t imm5) {
-  return thumb16_opcode_two_regs_low_imm5(m0_opcode_asr_imm, rd, rm, imm5);
+  return thumb16_opcode_two_regs_low_imm5(4096, rd, rm, imm5);
 }
 
-thumb_opcode_t m0_asr_low(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_asr_low, rd, rm);
+thumb_opcode_t m0_asr_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(16640, rdn, rm);
 }
 
-thumb_opcode_t m0_cmn_low(reg_t rn, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_cmn_low, rn, rm);
+thumb_opcode_t m0_cmn_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(17088, rdn, rm);
 }
 
-thumb_opcode_t m0_cmp_imm8(reg_t rn, uint8_t imm8) {
-  return thumb16_opcode_one_reg_low_imm8(m0_opcode_cmp_imm8, rn, imm8);
+thumb_opcode_t m0_cmp_imm8(reg_t rdn, uint8_t imm8) {
+  return thumb16_opcode_one_reg_low_imm8(10240, rdn, imm8);
 }
 
-thumb_opcode_t m0_cmp_low(reg_t rn, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_cmp_low, rn, rm);
+thumb_opcode_t m0_cmp_any(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_any(17664, rdn, rm);
 }
 
-thumb_opcode_t m0_cmp_any(reg_t rn, reg_t rm) {
-  return thumb16_opcode_two_regs_any(m0_opcode_cmp_any, rn, rm);
-}
-
-thumb_opcode_t m0_eor_low(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_eor_low, rd, rm);
+thumb_opcode_t m0_eor_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(16448, rdn, rm);
 }
 
 thumb_opcode_t m0_lsl_imm(reg_t rd, reg_t rm, uint8_t imm5) {
-  return thumb16_opcode_two_regs_low_imm5(m0_opcode_lsl_imm, rd, rm, imm5);
+  return thumb16_opcode_two_regs_low_imm5(0, rd, rm, imm5);
 }
 
-thumb_opcode_t m0_lsl_low(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_lsl_low, rd, rm);
+thumb_opcode_t m0_lsl_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(16512, rdn, rm);
 }
 
 thumb_opcode_t m0_lsr_imm(reg_t rd, reg_t rm, uint8_t imm5) {
-  return thumb16_opcode_two_regs_low_imm5(m0_opcode_lsr_imm, rd, rm, imm5);
+  return thumb16_opcode_two_regs_low_imm5(2048, rd, rm, imm5);
 }
 
-thumb_opcode_t m0_lsr_low(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_lsr_low, rd, rm);
+thumb_opcode_t m0_lsr_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(16576, rdn, rm);
 }
 
-thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8) {
-  return thumb16_opcode_one_reg_low_imm8(m0_opcode_mov_imm, rd, imm8);
-}
-  
-thumb_opcode_t m0_mov_any(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_any(m0_opcode_mov_any, rd, rm);
+thumb_opcode_t m0_mov_imm(reg_t rdn, uint8_t imm8) {
+  return thumb16_opcode_one_reg_low_imm8(8192, rdn, imm8);
 }
 
-thumb_opcode_t m0_mov_low(reg_t rd, reg_t rm) {
-  return thumb16_opcode_two_regs_low(m0_opcode_mov_low, rd, rm); 
+thumb_opcode_t m0_mov_any(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_any(17920, rdn, rm);
 }
 
-thumb_opcode_t m0_sub_imm3(reg_t rd, reg_t r, uint8_t imm3) {
-  return thumb16_opcode_two_regs_low_imm3(m0_opcode_sub_imm3, rd, r, imm3);
-}
-
-thumb_opcode_t m0_sub_imm8(reg_t rd, uint8_t imm8) {
-  return thumb16_opcode_one_reg_low_imm8(m0_opcode_sub_imm8, rd, imm8);
+thumb_opcode_t m0_mov_low(reg_t rdn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(0, rdn, rm);
 }
 
 thumb_opcode_t m0_sub_low(reg_t rd, reg_t rn, reg_t rm) {
-  return thumb16_opcode_three_regs_low(m0_opcode_sub_low, rd, rn, rm);
+  return thumb16_opcode_three_regs_low(6656, rd, rn, rm);
 }
 
-thumb_opcode_t m0_sub_sp_imm7(uint8_t imm7) {
-  return thumb16_opcode_imm7(m0_opcode_sub_sp_imm, imm7);
+thumb_opcode_t m0_sub_imm3(reg_t rd, reg_t rm, uint8_t imm3) {
+  return thumb16_opcode_two_regs_low_imm3(7680, rd, rm, imm3);
+}
+
+thumb_opcode_t m0_sub_imm8(reg_t rdn, uint8_t imm8) {
+  return thumb16_opcode_one_reg_low_imm8(14336, rdn, imm8);
+}
+
+thumb_opcode_t m0_sub_sp_imm(uint8_t imm7) {
+  return thumb16_opcode_imm7(45184, imm7);
 }
