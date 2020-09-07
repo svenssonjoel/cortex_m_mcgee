@@ -70,30 +70,61 @@ typedef struct {
 
 extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
 
-/* Generated code */ 
+/* Generated code */
 extern thumb_opcode_t m0_adc_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_add_imm3(reg_t rd, reg_t rm, uint8_t imm3);
 extern thumb_opcode_t m0_add_imm8(reg_t rdn, uint8_t imm8);
 extern thumb_opcode_t m0_add_low(reg_t rd, reg_t rn, reg_t rm);
 extern thumb_opcode_t m0_add_any(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_add_sp_imm8(reg_t rdn, uint8_t imm8);
+extern thumb_opcode_t m0_add_sp_imm7(uint8_t imm7);
 extern thumb_opcode_t m0_and_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_asr_imm(reg_t rd, reg_t rm, uint8_t imm5);
 extern thumb_opcode_t m0_asr_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_bic_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_bkpt_imm8(uint8_t imm8);
+extern thumb_opcode_t m0_blx_any(reg_t rdn);
+extern thumb_opcode_t m0_bx_any(reg_t rdn);
+extern thumb_opcode_t m0_cbnz_f_imm5(reg_t rdn, uint8_t imm5);
+extern thumb_opcode_t m0_cbnz_n_imm5(reg_t rdn, uint8_t imm5);
+extern thumb_opcode_t m0_cbz_f_imm5(reg_t rdn, uint8_t imm5);
+extern thumb_opcode_t m0_cbz_n_imm5(reg_t rdn, uint8_t imm5);
 extern thumb_opcode_t m0_cmn_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_cmp_imm8(reg_t rdn, uint8_t imm8);
 extern thumb_opcode_t m0_cmp_any(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_eor_low(reg_t rdn, reg_t rm);
-extern thumb_opcode_t m0_lsl_imm(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_ldr_imm5(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_ldr_imm8(reg_t rdn, uint8_t imm8);
+extern thumb_opcode_t m0_ldr_lit(reg_t rdn, uint8_t imm8);
+extern thumb_opcode_t m0_ldr_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_ldrb_imm5(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_ldrb_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_ldrh_imm5(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_ldrh_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_ldrsb_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_ldrsh_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_lsl_imm5(reg_t rd, reg_t rm, uint8_t imm5);
 extern thumb_opcode_t m0_lsl_low(reg_t rdn, reg_t rm);
-extern thumb_opcode_t m0_lsr_imm(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_lsr_imm5(reg_t rd, reg_t rm, uint8_t imm5);
 extern thumb_opcode_t m0_lsr_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_mov_imm(reg_t rdn, uint8_t imm8);
 extern thumb_opcode_t m0_mov_any(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_mov_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_mul_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_mvn_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_orr_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_ror_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_rsb_low(reg_t rdn, reg_t rm);
+extern thumb_opcode_t m0_str_imm5(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_str_imm8(reg_t rdn, uint8_t imm8);
+extern thumb_opcode_t m0_str_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_strb_imm5(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_strb_low(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m0_strh_imm5(reg_t rd, reg_t rm, uint8_t imm5);
+extern thumb_opcode_t m0_strh_low(reg_t rd, reg_t rn, reg_t rm);
 extern thumb_opcode_t m0_sub_low(reg_t rd, reg_t rn, reg_t rm);
 extern thumb_opcode_t m0_sub_imm3(reg_t rd, reg_t rm, uint8_t imm3);
 extern thumb_opcode_t m0_sub_imm8(reg_t rdn, uint8_t imm8);
 extern thumb_opcode_t m0_sub_sp_imm(uint8_t imm7);
-
-
+extern thumb_opcode_t m0_tst_low(reg_t rdn, reg_t rm);
 #endif
