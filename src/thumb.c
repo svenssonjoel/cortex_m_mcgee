@@ -72,12 +72,14 @@ const uint16_t m0_opcode_add_imm3   = 0b0001110000000000; /* add low_reg low_reg
 const uint16_t m0_opcode_add_imm8   = 0b0011000000000000; /* add low_reg imm8 */
 const uint16_t m0_opcode_add_low    = 0b0001100000000000; /* add low_reg low_reg low_reg */
 const uint16_t m0_opcode_add_any    = 0b0100010000000000; /* add any_reg any_reg */
+const uint16_t m0_opcode_and_low    = 0b0100000000000000; /* and low_reg low_reg */
 const uint16_t m0_opcode_asr_imm    = 0b0001000000000000;
 const uint16_t m0_opcode_asr_low    = 0b0100000100000000;
 const uint16_t m0_opcode_cmn_low    = 0b0100001011000000; /* cmn low_reg low_reg */
 const uint16_t m0_opcode_cmp_imm8   = 0b0010100000000000; /* cmp low_reg imm8 */
 const uint16_t m0_opcode_cmp_low    = 0b0100001010000000; /* cmp low_reg low_reg */
 const uint16_t m0_opcode_cmp_any    = 0b0100010100000000; /* cmp any_reg any_reg */
+const uint16_t m0_opcode_eor_low    = 0b0100000001000000; /* eor low_reg low_reg */
 const uint16_t m0_opcode_lsl_imm    = 0b0000000000000000;
 const uint16_t m0_opcode_lsl_low    = 0b0100000010000000;
 const uint16_t m0_opcode_lsr_imm    = 0b0000100000000000;
@@ -218,6 +220,10 @@ thumb_opcode_t m0_add_imm8(reg_t rd, uint8_t imm8) {
   return thumb16_opcode_one_reg_low_imm8(m0_opcode_add_imm8, rd, imm8);
 }
 
+thumb_opcode_t m0_and_low(reg_t rd, reg_t rm) {
+  return thumb16_opcode_two_regs_low(m0_opcode_and_low, rd, rm);
+}
+
 thumb_opcode_t m0_asr_imm(reg_t rd, reg_t rm, uint8_t imm5) {
   return thumb16_opcode_two_regs_low_imm5(m0_opcode_asr_imm, rd, rm, imm5);
 }
@@ -240,6 +246,10 @@ thumb_opcode_t m0_cmp_low(reg_t rn, reg_t rm) {
 
 thumb_opcode_t m0_cmp_any(reg_t rn, reg_t rm) {
   return thumb16_opcode_two_regs_any(m0_opcode_cmp_any, rn, rm);
+}
+
+thumb_opcode_t m0_eor_low(reg_t rd, reg_t rm) {
+  return thumb16_opcode_two_regs_low(m0_opcode_eor_low, rd, rm);
 }
 
 thumb_opcode_t m0_lsl_imm(reg_t rd, reg_t rm, uint8_t imm5) {
