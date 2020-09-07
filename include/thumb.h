@@ -30,6 +30,7 @@
 #include <instructions.h>
 #include <registers.h>
 
+#define IMM7_MASK (uint8_t)0b01111111
 #define IMM5_MASK (uint8_t)0b00011111
 #define IMM3_MASK (uint8_t)0b00000111
 #define IMM2_MASK (uint8_t)0b00000011
