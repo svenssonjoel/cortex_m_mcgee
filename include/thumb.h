@@ -30,10 +30,13 @@
 #include <instructions.h>
 #include <registers.h>
 
+
 #define IMM7_MASK (uint8_t)0b01111111
 #define IMM5_MASK (uint8_t)0b00011111
 #define IMM3_MASK (uint8_t)0b00000111
 #define IMM2_MASK (uint8_t)0b00000011
+
+#define IMM11_MASK (uint16_t)0b0000011111111111
 
 #define REG_LOW_MASK      (uint8_t)0b00000111
 #define REG_MASK          (uint8_t)0b00001111
@@ -85,6 +88,7 @@ extern thumb_opcode_t m0_bic_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_bkpt_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_blx_any(reg_t rdn);
 extern thumb_opcode_t m0_bx_any(reg_t rdn);
+extern thumb_opcode_t m0_b_imm11(uint16_t imm11);
 extern thumb_opcode_t m0_beq_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_bne_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_bcs_imm8(uint8_t imm8);
@@ -99,7 +103,6 @@ extern thumb_opcode_t m0_bge_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_blt_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_bgt_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_ble_imm8(uint8_t imm8);
-extern thumb_opcode_t m0_bal_imm8(uint8_t imm8);
 extern thumb_opcode_t m0_cbnz_f_imm5(reg_t rdn, uint8_t imm5);
 extern thumb_opcode_t m0_cbnz_n_imm5(reg_t rdn, uint8_t imm5);
 extern thumb_opcode_t m0_cbz_f_imm5(reg_t rdn, uint8_t imm5);

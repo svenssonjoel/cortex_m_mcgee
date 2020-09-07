@@ -29,6 +29,7 @@ typedef enum {
   nothing,
   imm7,
   imm8,
+  imm11,
   one_reg_low_imm5,
   one_reg_low_imm8,
   two_regs_low,
@@ -67,6 +68,7 @@ const thumb16_opcode opcodes[] =
    {"m0_bkpt_imm8"  , 0b1011111000000000, imm8},
    {"m0_blx_any"    , 0b0100011110000000, one_reg_any},
    {"m0_bx_any"     , 0b0100011100000000, one_reg_any},
+   {"m0_b_imm11"    , 0b1110000000000000, imm11},
    {"m0_beq_imm8"   , 0b1101000000000000, imm8},
    {"m0_bne_imm8"   , 0b1101000100000000, imm8},
    {"m0_bcs_imm8"   , 0b1101001000000000, imm8},
@@ -81,7 +83,6 @@ const thumb16_opcode opcodes[] =
    {"m0_blt_imm8"   , 0b1101101100000000, imm8},
    {"m0_bgt_imm8"   , 0b1101110000000000, imm8},
    {"m0_ble_imm8"   , 0b1101110100000000, imm8},
-   {"m0_bal_imm8"   , 0b1101111000000000, imm8},
    {"m0_cbnz_f_imm5", 0b1011101100000000, one_reg_low_imm5},
    {"m0_cbnz_n_imm5", 0b1011100100000000, one_reg_low_imm5},
    {"m0_cbz_f_imm5" , 0b1011001100000000, one_reg_low_imm5},
@@ -155,6 +156,9 @@ void print_extern_decl(thumb16_opcode op) {
   case imm8:
     printf("extern thumb_opcode_t %s(uint8_t imm8);\n", op.name);
     break;
+  case imm11:
+    printf("extern thumb_opcode_t %s(uint16_t imm11);\n", op.name);
+    break;
   case one_reg_any:
     printf("extern thumb_opcode_t %s(reg_t rdn);\n", op.name);
     break;
@@ -201,6 +205,11 @@ void print_opcode(thumb16_opcode op) {
   case imm8:
     printf("thumb_opcode_t %s(uint8_t imm8) {\n", op.name);
     printf("  return thumb16_opcode_imm8(%u, imm8);\n", op.opcode);
+    printf("}\n\n");
+    break;
+  case imm11:
+    printf("thumb_opcode_t %s(uint16_t imm11) {\n", op.name);
+    printf("  return thumb16_opcode_imm11(%u, imm11);\n", op.opcode);
     printf("}\n\n");
     break;
   case one_reg_any:
