@@ -73,7 +73,11 @@ const uint16_t m0_opcode_add_imm8   = 0b0011000000000000; /* add low_reg imm8 */
 const uint16_t m0_opcode_add_low    = 0b0001100000000000; /* add low_reg low_reg low_reg */
 const uint16_t m0_opcode_add_any    = 0b0100010000000000; /* add any_reg any_reg */
 const uint16_t m0_opcode_asr_imm    = 0b0001000000000000;
-const uint16_t m0_opcode_asr_low    = 0b0100000100000000; 
+const uint16_t m0_opcode_asr_low    = 0b0100000100000000;
+const uint16_t m0_opcode_cmn_low    = 0b0100001011000000; /* cmn low_reg low_reg */
+const uint16_t m0_opcode_cmp_imm8   = 0b0010100000000000; /* cmp low_reg imm8 */
+const uint16_t m0_opcode_cmp_low    = 0b0100001010000000; /* cmp low_reg low_reg */
+const uint16_t m0_opcode_cmp_any    = 0b0100010100000000; /* cmp any_reg any_reg */
 const uint16_t m0_opcode_lsl_imm    = 0b0000000000000000;
 const uint16_t m0_opcode_lsl_low    = 0b0100000010000000;
 const uint16_t m0_opcode_lsr_imm    = 0b0000100000000000;
@@ -180,6 +184,16 @@ thumb_opcode_t thumb16_opcode_two_regs_low_imm5(uint16_t opcode, reg_t rd, reg_t
   return op;
 }
 
+thumb_opcode_t thumb16_opcode_two_regs_any(uint16_t opcode, reg_t r1, reg_t r2) {
+  thumb_opcode_t op;
+  op.kind = thumb16;
+  op.opcode.thumb16 = opcode | ((r2 & REG_MASK) << 3) | (r1 & REG_LOW_MASK);
+  if (r1 & REG_HIGH_BIT_MASK) 
+    op.opcode.thumb16 |= (1 << 7);
+  return op;
+}
+
+
 /* ************************************************************ 
    M0 OpCodes
    ************************************************************ */ 
@@ -193,12 +207,7 @@ thumb_opcode_t m0_add_low(reg_t rd, reg_t rn, reg_t rm) {
 }
 
 thumb_opcode_t m0_add_any(reg_t rd, reg_t rm) {
-  thumb_opcode_t op;
-  op.kind = thumb16;
-  op.opcode.thumb16 = m0_opcode_add_any | ((rm << 3) & REG_MASK) | (rd & REG_LOW_MASK);
-  if (rd & REG_HIGH_BIT_MASK) 
-    op.opcode.thumb16 |= (1 << 7);
-  return op;
+  return thumb16_opcode_two_regs_any(m0_opcode_add_any, rd, rm);
 }
 
 thumb_opcode_t m0_add_imm3(reg_t rd, reg_t r, uint8_t imm3) {
@@ -215,6 +224,22 @@ thumb_opcode_t m0_asr_imm(reg_t rd, reg_t rm, uint8_t imm5) {
 
 thumb_opcode_t m0_asr_low(reg_t rd, reg_t rm) {
   return thumb16_opcode_two_regs_low(m0_opcode_asr_low, rd, rm);
+}
+
+thumb_opcode_t m0_cmn_low(reg_t rn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(m0_opcode_cmn_low, rn, rm);
+}
+
+thumb_opcode_t m0_cmp_imm8(reg_t rn, uint8_t imm8) {
+  return thumb16_opcode_one_reg_low_imm8(m0_opcode_cmp_imm8, rn, imm8);
+}
+
+thumb_opcode_t m0_cmp_low(reg_t rn, reg_t rm) {
+  return thumb16_opcode_two_regs_low(m0_opcode_cmp_low, rn, rm);
+}
+
+thumb_opcode_t m0_cmp_any(reg_t rn, reg_t rm) {
+  return thumb16_opcode_two_regs_any(m0_opcode_cmp_any, rn, rm);
 }
 
 thumb_opcode_t m0_lsl_imm(reg_t rd, reg_t rm, uint8_t imm5) {
@@ -238,11 +263,7 @@ thumb_opcode_t m0_mov_imm(reg_t rd, uint8_t imm8) {
 }
   
 thumb_opcode_t m0_mov_any(reg_t rd, reg_t rm) {
-  thumb_opcode_t op;
-  op.kind = thumb16;
-  op.opcode.thumb16 = m0_opcode_mov_any | ((rm & REG_MASK) << 3) | (rd & REG_LOW_MASK);
-  if (rd & REG_HIGH_BIT_MASK) op.opcode.thumb16 = op.opcode.thumb16 | (1 << 7);
-  return op;
+  return thumb16_opcode_two_regs_any(m0_opcode_mov_any, rd, rm);
 }
 
 thumb_opcode_t m0_mov_low(reg_t rd, reg_t rm) {
