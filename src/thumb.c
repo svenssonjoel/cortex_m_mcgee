@@ -122,7 +122,7 @@ thumb_opcode_t thumb16_opcode_two_regs_low(uint16_t opcode, reg_t rd, reg_t rm) 
 
 thumb_opcode_t thumb16_opcode_three_regs_low(uint16_t opcode, reg_t rd, reg_t rn, reg_t rm) {
   thumb_opcode_t op;
-  if (rd > r7 || rm > r7 || rn > 7) {
+  if (rd > r7 || rm > r7 || rn > r7) {
     op.kind = encode_error;
   } else { 
     op.kind = thumb16;
