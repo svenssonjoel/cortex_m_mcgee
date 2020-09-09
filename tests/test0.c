@@ -59,13 +59,10 @@ int main(int argc, char **argv) {
   test_assert_reg("r2", "0x00000005");
   emit_opcode(&seq, m0_add_any(r0, r2)); 
   emit_opcode(&seq, m0_asr_imm(r0, r0, 1)); 
-  emit_opcode(&seq, m0_mov_imm(r2, 0xDE));
-  emit_opcode(&seq, m0_mov_imm(r3, 0xAD));
-  emit_opcode(&seq, m0_mov_imm(r4, 0xBE));
-  emit_opcode(&seq, m0_mov_imm(r5, 0xEF));
-  emit_opcode(&seq, m0_mov_imm(r6, 0xDC));
-  emit_opcode(&seq, m0_mov_imm(r7, 0x12));
-    emit_opcode(&seq, m0_bl(2));
+  emit_opcode(&seq, m0_dsb());
+  emit_opcode(&seq, m0_dmb());
+  emit_opcode(&seq, m0_isb());
+  emit_opcode(&seq, m0_bl(2));
   //emit_opcode(&seq, m0_mov_imm(r9, 0x99));
 
 

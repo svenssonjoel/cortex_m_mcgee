@@ -87,6 +87,10 @@ int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   return 1;
 }
 
+/* ************************************************************
+   Thumb 16bit encoders 
+   ************************************************************ */
+
 thumb_opcode_t thumb16_opcode(uint16_t opcode) {
   thumb_opcode_t op;
   op.kind = thumb16;
@@ -213,6 +217,15 @@ thumb_opcode_t thumb16_opcode_two_regs_any(uint16_t opcode, reg_t r1, reg_t r2) 
     op.opcode.thumb16 |= (1 << 7);
   return op;
 }
+
+/* ************************************************************
+   Thumb 32bit encoders 
+   ************************************************************ */
+
+
+
+
+
 
 /* ************************************************************
    M0 OpCodes (32bit) (handmade for now) 
