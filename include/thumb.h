@@ -78,7 +78,10 @@ extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
 
 /* handcoded */
 extern thumb_opcode_t m0_bl(int32_t offset);
-
+extern thumb_opcode_t m0_dsb(void);
+extern thumb_opcode_t m0_dmb(void);
+extern thumb_opcode_t m0_isb(void);
+  
 /* Generated code */
 extern thumb_opcode_t m0_adc_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_add_imm3(reg_t rd, reg_t rm, uint8_t imm3);

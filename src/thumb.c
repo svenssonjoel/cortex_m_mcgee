@@ -233,10 +233,35 @@ thumb_opcode_t m0_bl(int32_t offset) {
   uint16_t imm10 = ((offset >> 12) & IMM10_MASK);
   op.opcode.thumb32.high |= imm10;
   op.opcode.thumb32.low |= imm11;
-
   return op;
 }
 
+thumb_opcode_t m0_dsb(void) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  uint32_t opcode = 0b11110011101111111000111101001111;
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
+
+thumb_opcode_t m0_dmb(void) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  uint32_t opcode = 0b11110011101111111000111101011111;
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
+
+thumb_opcode_t m0_isb(void) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  uint32_t opcode = 0b11110011101111111000111101101111;
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
 
 
 /* ************************************************************ 
