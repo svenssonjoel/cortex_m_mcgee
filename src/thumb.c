@@ -222,7 +222,24 @@ thumb_opcode_t thumb16_opcode_two_regs_any(uint16_t opcode, reg_t r1, reg_t r2) 
    Thumb 32bit encoders 
    ************************************************************ */
 
-
+thumb_opcode_t thumb32_opcode_two_regs_any_imm12_sf(uint32_t opcode, reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= ((rn & REG_MASK) << 16);
+  uint8_t imm8 = imm12;
+  uint8_t imm3 = ((imm12 >> 8) & IMM3_MASK);
+  uint8_t i    = ((imm12 >> 11) & 1);
+  opcode |= ((uint32_t)imm8);
+  opcode |= (((uint32_t)imm3) << 12);
+  opcode |= (((uint32_t)i) << 26);
+  
+  opcode |= sf ? (1 << 20) : 0;
+	     
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
 
 
 
