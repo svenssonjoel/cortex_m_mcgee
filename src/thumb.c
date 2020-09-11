@@ -222,7 +222,19 @@ thumb_opcode_t thumb16_opcode_two_regs_any(uint16_t opcode, reg_t r1, reg_t r2) 
    Thumb 32bit encoders 
    ************************************************************ */
 
-thumb_opcode_t thumb32_opcode_two_regs_any_imm12_sf(uint32_t opcode, reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
+thumb_opcode_t thumb32_opcode(uint32_t opcode) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;
+}
+
+thumb_opcode_t thumb32_opcode_two_regs_any_imm12_sf(uint32_t opcode,
+						    reg_t rd,
+						    reg_t rn,
+						    uint16_t imm12,
+						    bool sf) {
   thumb_opcode_t op;
   op.kind = thumb32;
   opcode |= ((rd & REG_MASK) << 8);
@@ -241,7 +253,47 @@ thumb_opcode_t thumb32_opcode_two_regs_any_imm12_sf(uint32_t opcode, reg_t rd, r
   return op;  
 }
 
+uint32_t shift_mask(imm_shift_t shift) {
+  switch(shift) {
+  case imm_shift_lsl:
+    return IMM_SHIFT_LSL;
+  case imm_shift_lsr:
+    return IMM_SHIFT_LSR;
+  case imm_shift_asr:
+    return IMM_SHIFT_ASR;
+  case imm_shift_rrx:
+    return IMM_SHIFT_RRX;
+  case imm_shift_ror:
+    return IMM_SHIFT_ROR;
+  }
+}
 
+thumb_opcode_t thumb32_opcode_three_regs_any_imm5_shift_sf(uint32_t opcode,
+							   reg_t rd,
+							   reg_t rn,
+							   reg_t rm,
+							   uint8_t imm5,
+							   imm_shift_t shift,
+							   bool sf) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= ((rn & REG_MASK) << 16);
+  opcode |= (rm & REG_MASK);
+  opcode |= shift_mask(shift) << 4;
+
+  uint8_t imm2 = imm5 & 0b00000011;
+  uint8_t imm3 = (imm5 >> 2) & 0b00000111;
+
+  opcode |= ((uint32_t)imm2) << 6;
+  opcode |= ((uint32_t)imm3) << 12;
+  
+  opcode |= sf ? (1 << 20) : 0;
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
 
 
 /* ************************************************************

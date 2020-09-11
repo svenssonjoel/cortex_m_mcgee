@@ -46,6 +46,20 @@
 #define REG_MASK          (uint8_t)0b00001111
 #define REG_HIGH_BIT_MASK (uint8_t)0b00001000
 
+#define IMM_SHIFT_LSL  (uint32_t)0b00
+#define IMM_SHIFT_LSR  (uint32_t)0b01
+#define IMM_SHIFT_ASR  (uint32_t)0b10
+#define IMM_SHIFT_RRX  (uint32_t)0b11    //RRX is IMM5 = 0
+#define IMM_SHIFT_ROR  (uint32_t)0b11    //ROR or RRX depends on IMM5 being 0 or n > 0
+
+typedef enum {
+  imm_shift_lsl,
+  imm_shift_lsr,
+  imm_shift_asr,
+  imm_shift_rrx,
+  imm_shift_ror
+} imm_shift_t;
+
 typedef uint16_t thumb16_opcode_t;
 
 typedef struct {

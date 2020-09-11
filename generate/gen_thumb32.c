@@ -27,7 +27,8 @@
 
 typedef enum {
   nothing,
-  two_regs_any_imm12_sf
+  two_regs_any_imm12_sf,
+  three_regs_any_imm5_shift_sf
 } thumb32_opcode_format;
 
 
@@ -39,14 +40,21 @@ typedef struct {
 
 
 const thumb32_opcode opcodes[] =
-  {{"m3_adc_imm"    ,0b11110001010000000000000000000000, two_regs_any_imm12_sf},
-   {NULL, 0, 0}};
+  { {"m0_dsb"        , 0b11110011101111111000111101001111, nothing},
+    {"m0_dmb"        , 0b11110011101111111000111101011111, nothing},
+    {"m0_isb"        , 0b11110011101111111000111101101111, nothing},
+    {"m3_adc_imm"    , 0b11110001010000000000000000000000, two_regs_any_imm12_sf},
+    {"m3_adc_any"    , 0b11101011010000000000000000000000, three_regs_any_imm5_shift_sf},
+    {NULL, 0, 0}};
 
 
 void print_extern_decl(thumb32_opcode op) {
   switch(op.format) {
   case nothing:
     printf("extern thumb_opcode_t %s(void);\n", op.name);
+    break;
+  case two_regs_any_imm12_sf:
+    printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12, bool sf);\n", op.name);
     break;
   default:
     printf("Error - unknown\n");
@@ -57,8 +65,23 @@ void print_extern_decl(thumb32_opcode op) {
 void print_opcode(thumb32_opcode op) {
 
   switch(op.format) {
+  case nothing:
+    printf("thumb_opcode_t %s(void) {\n", op.name);
+    printf("  return thumb_opcode(%u);\n", op.opcode);
+    printf("}\n\n");
+    break;
+  case two_regs_any_imm12_sf:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {\n", op.name);
+    printf("  return thumb_opcode_two_regs_any_imm12_sf(%u, rd, rn, imm12, sf);\n", op.opcode);
+    printf("}\n\n");
+    break;
+  case three_regs_any_imm5_shift_sf:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {\n", op.name);
+    printf("  return thumb_opcode_three_regs_any_imm5_shift_sf(%u, rd, rn, rm, imm5, shift, sf); \n", op.opcode);
+    printf("}\n\n");
+    break;
   default:
-    printf("Error - unknown\n");
+    printf("Error - unknown  (%s)", op.name);
     break;
   } 
 }
