@@ -45,6 +45,8 @@ const thumb32_opcode opcodes[] =
     {"m0_isb"        , 0b11110011101111111000111101101111, nothing},
     {"m3_adc_imm"    , 0b11110001010000000000000000000000, two_regs_any_imm12_sf},
     {"m3_adc_any"    , 0b11101011010000000000000000000000, three_regs_any_imm5_shift_sf},
+    {"m3_add_const"  , 0b11110001000000000000000000000000, two_regs_any_imm12_sf},
+    {"m3_add_imm"    , 0b11110010000000000000000000000000, two_regs_any_imm12_sf},
     {NULL, 0, 0}};
 
 
@@ -55,6 +57,9 @@ void print_extern_decl(thumb32_opcode op) {
     break;
   case two_regs_any_imm12_sf:
     printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12, bool sf);\n", op.name);
+    break;
+  case three_regs_any_imm5_shift_sf:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);\n", op.name);
     break;
   default:
     printf("Error - unknown\n");
