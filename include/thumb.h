@@ -57,7 +57,8 @@ typedef enum {
   imm_shift_lsr,
   imm_shift_asr,
   imm_shift_rrx,
-  imm_shift_ror
+  imm_shift_ror,
+  imm_shift_none
 } imm_shift_t;
 
 typedef uint16_t thumb16_opcode_t;
@@ -186,4 +187,22 @@ extern thumb_opcode_t m0_uxth_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_wfe(void);
 extern thumb_opcode_t m0_wfi(void);
 extern thumb_opcode_t m0_yield(void);
+
+/* M3 Instructions */
+
+
+extern thumb_opcode_t m3_adc_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
+extern thumb_opcode_t m3_adc_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);
+extern thumb_opcode_t m3_add_const(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
+extern thumb_opcode_t m3_add_imm(reg_t rd, reg_t rn, uint16_t imm12);
+extern thumb_opcode_t m3_add_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);
+extern thumb_opcode_t m3_add_sp_imm(reg_t rd, reg_t rn, uint8_t imm5, imm_shift_t shift, bool sf);
+extern thumb_opcode_t m3_add_pc_imm(reg_t rd, uint16_t imm12);
+extern thumb_opcode_t m3_sub_pc_imm(reg_t rd, uint16_t imm12);
+extern thumb_opcode_t m3_and_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
+extern thumb_opcode_t m3_and_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);
+extern thumb_opcode_t m3_asr_imm(reg_t rd, reg_t rn, uint8_t imm5, bool sf);
+extern thumb_opcode_t m3_asr_any(reg_t rd, reg_t rn, reg_t rm, bool sf);
+
+
 #endif

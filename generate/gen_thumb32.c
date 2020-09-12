@@ -27,7 +27,12 @@
 
 typedef enum {
   nothing,
+  one_reg_any_imm12,
+  two_regs_any_imm12,
   two_regs_any_imm12_sf,
+  two_regs_any_imm5_sf,
+  two_regs_any_imm5_shift_sf,
+  three_regs_any_sf,
   three_regs_any_imm5_shift_sf
 } thumb32_opcode_format;
 
@@ -46,7 +51,15 @@ const thumb32_opcode opcodes[] =
     {"m3_adc_imm"    , 0b11110001010000000000000000000000, two_regs_any_imm12_sf},
     {"m3_adc_any"    , 0b11101011010000000000000000000000, three_regs_any_imm5_shift_sf},
     {"m3_add_const"  , 0b11110001000000000000000000000000, two_regs_any_imm12_sf},
-    {"m3_add_imm"    , 0b11110010000000000000000000000000, two_regs_any_imm12_sf},
+    {"m3_add_imm"    , 0b11110010000000000000000000000000, two_regs_any_imm12},
+    {"m3_add_any"    , 0b11101011000000000000000000000000, three_regs_any_imm5_shift_sf},
+    {"m3_add_sp_imm" , 0b11101011000011010000000000000000, two_regs_any_imm5_shift_sf},
+    {"m3_add_pc_imm" , 0b11110010000011110000000000000000, one_reg_any_imm12},
+    {"m3_sub_pc_imm" , 0b11110010101011110000000000000000, one_reg_any_imm12},
+    {"m3_and_imm"    , 0b11110000000000000000000000000000, two_regs_any_imm12_sf},
+    {"m3_and_any"    , 0b11101010000000000000000000000000, three_regs_any_imm5_shift_sf},
+    {"m3_asr_imm"    , 0b11101010010011110000000000100000, two_regs_any_imm5_sf},
+    {"m3_asr_any"    , 0b11111010010000001111000000000000, three_regs_any_sf},
     {NULL, 0, 0}};
 
 
@@ -55,11 +68,26 @@ void print_extern_decl(thumb32_opcode op) {
   case nothing:
     printf("extern thumb_opcode_t %s(void);\n", op.name);
     break;
+  case one_reg_any_imm12:
+    printf("extern thumb_opcode_t %s(reg_t rd, uint16_t imm12);\n", op.name);
+    break;
+  case two_regs_any_imm12:
+    printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12);\n", op.name);
+    break;
   case two_regs_any_imm12_sf:
     printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12, bool sf);\n", op.name);
     break;
+  case two_regs_any_imm5_sf:
+    printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint8_t imm5, bool sf);\n", op.name);
+    break;
+  case two_regs_any_imm5_shift_sf:
+    printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint8_t imm5, imm_shift_t shift, bool sf);\n", op.name);
+    break;
+  case three_regs_any_sf:
+    printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, bool sf);\n", op.name);
+    break;
   case three_regs_any_imm5_shift_sf:
-    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);\n", op.name);
+    printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);\n", op.name);
     break;
   default:
     printf("Error - unknown\n");
@@ -72,17 +100,42 @@ void print_opcode(thumb32_opcode op) {
   switch(op.format) {
   case nothing:
     printf("thumb_opcode_t %s(void) {\n", op.name);
-    printf("  return thumb_opcode(%u);\n", op.opcode);
+    printf("  return thumb32_opcode(%u);\n", op.opcode);
     printf("}\n\n");
     break;
+  case one_reg_any_imm12:
+    printf("thumb_opcode_t %s(reg_t rd,uint16_t imm12) {\n", op.name);
+    printf("  return thumb32_opcode_one_reg_any_imm12(%u, rd, imm12);\n", op.opcode);
+    printf("}\n\n");
+    break;  
+  case two_regs_any_imm12:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12) {\n", op.name);
+    printf("  return thumb32_opcode_two_regs_any_imm12(%u, rd, rn, imm12);\n", op.opcode);
+    printf("}\n\n");
+    break;  
   case two_regs_any_imm12_sf:
     printf("thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {\n", op.name);
-    printf("  return thumb_opcode_two_regs_any_imm12_sf(%u, rd, rn, imm12, sf);\n", op.opcode);
+    printf("  return thumb32_opcode_two_regs_any_imm12_sf(%u, rd, rn, imm12, sf);\n", op.opcode);
     printf("}\n\n");
     break;
+  case two_regs_any_imm5_sf:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, uint8_t imm5, bool sf) {\n", op.name);
+    printf("  return thumb32_opcode_two_regs_any_imm5_sf(%u, rd, rn, imm5, sf);\n", op.opcode);
+    printf("}\n\n");
+    break;
+  case two_regs_any_imm5_shift_sf:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, uint8_t imm5, imm_shift_t shift, bool sf) {\n", op.name);
+    printf("  return thumb32_opcode_two_regs_any_imm5_shift_sf(%u, rd, rn, imm5, shift, sf);\n", op.opcode);
+    printf("}\n\n");
+    break;
+  case three_regs_any_sf:
+    printf("thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, bool sf) {\n", op.name);
+    printf("  return thumb32_opcode_three_regs_any_sf(%u, rd, rn, rm, sf); \n", op.opcode);
+    printf("}\n\n");
+    break;  
   case three_regs_any_imm5_shift_sf:
     printf("thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {\n", op.name);
-    printf("  return thumb_opcode_three_regs_any_imm5_shift_sf(%u, rd, rn, rm, imm5, shift, sf); \n", op.opcode);
+    printf("  return thumb32_opcode_three_regs_any_imm5_shift_sf(%u, rd, rn, rm, imm5, shift, sf); \n", op.opcode);
     printf("}\n\n");
     break;
   default:

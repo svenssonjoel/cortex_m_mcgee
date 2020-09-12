@@ -87,6 +87,24 @@ int emit_opcode(instr_seq_t *seq, thumb_opcode_t op) {
   return 1;
 }
 
+uint32_t shift_mask(imm_shift_t shift) {
+  switch(shift) {
+  case imm_shift_lsl:
+    return IMM_SHIFT_LSL;
+  case imm_shift_lsr:
+    return IMM_SHIFT_LSR;
+  case imm_shift_asr:
+    return IMM_SHIFT_ASR;
+  case imm_shift_rrx:
+    return IMM_SHIFT_RRX;
+  case imm_shift_ror:
+    return IMM_SHIFT_ROR;
+  case imm_shift_none:
+    return 0;
+  }
+}
+
+
 /* ************************************************************
    Thumb 16bit encoders 
    ************************************************************ */
@@ -230,6 +248,44 @@ thumb_opcode_t thumb32_opcode(uint32_t opcode) {
   return op;
 }
 
+thumb_opcode_t thumb32_opcode_one_reg_any_imm12(uint32_t opcode,
+						reg_t rd,
+						uint16_t imm12) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  uint8_t imm8 = imm12;
+  uint8_t imm3 = ((imm12 >> 8) & IMM3_MASK);
+  uint8_t i    = ((imm12 >> 11) & 1);
+  opcode |= ((uint32_t)imm8);
+  opcode |= (((uint32_t)imm3) << 12);
+  opcode |= (((uint32_t)i) << 26);
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
+
+thumb_opcode_t thumb32_opcode_two_regs_any_imm12(uint32_t opcode,
+						 reg_t rd,
+						 reg_t rn,
+						 uint16_t imm12) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= ((rn & REG_MASK) << 16);
+  uint8_t imm8 = imm12;
+  uint8_t imm3 = ((imm12 >> 8) & IMM3_MASK);
+  uint8_t i    = ((imm12 >> 11) & 1);
+  opcode |= ((uint32_t)imm8);
+  opcode |= (((uint32_t)imm3) << 12);
+  opcode |= (((uint32_t)i) << 26);
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
+
 thumb_opcode_t thumb32_opcode_two_regs_any_imm12_sf(uint32_t opcode,
 						    reg_t rd,
 						    reg_t rn,
@@ -253,20 +309,70 @@ thumb_opcode_t thumb32_opcode_two_regs_any_imm12_sf(uint32_t opcode,
   return op;  
 }
 
-uint32_t shift_mask(imm_shift_t shift) {
-  switch(shift) {
-  case imm_shift_lsl:
-    return IMM_SHIFT_LSL;
-  case imm_shift_lsr:
-    return IMM_SHIFT_LSR;
-  case imm_shift_asr:
-    return IMM_SHIFT_ASR;
-  case imm_shift_rrx:
-    return IMM_SHIFT_RRX;
-  case imm_shift_ror:
-    return IMM_SHIFT_ROR;
-  }
+thumb_opcode_t thumb32_opcode_two_regs_any_imm5_sf(uint32_t opcode,
+							 reg_t rd,
+							 reg_t rn,
+							 uint8_t imm5,
+							 bool sf) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= (rn & REG_MASK);
+  uint8_t imm2 = imm5 & 0b00000011;
+  uint8_t imm3 = (imm5 >> 2) & 0b00000111;
+  opcode |= ((uint32_t)imm2) << 6;
+  opcode |= ((uint32_t)imm3) << 12;
+
+  opcode |= sf ? (1 << 20) : 0;
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+  
 }
+
+thumb_opcode_t thumb32_opcode_two_regs_any_imm5_shift_sf(uint32_t opcode,
+							 reg_t rd,
+							 reg_t rn,
+							 uint8_t imm5,
+							 imm_shift_t shift,
+							 bool sf) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= (rn & REG_MASK);
+  uint8_t imm2 = imm5 & 0b00000011;
+  uint8_t imm3 = (imm5 >> 2) & 0b00000111;
+  opcode |= ((uint32_t)imm2) << 6;
+  opcode |= ((uint32_t)imm3) << 12;
+  opcode |= shift_mask(shift) << 4;
+
+  opcode |= sf ? (1 << 20) : 0;
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+  
+}
+
+thumb_opcode_t thumb32_opcode_three_regs_any_sf(uint32_t opcode,
+							   reg_t rd,
+							   reg_t rn,
+							   reg_t rm,
+							   bool sf) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= ((rn & REG_MASK) << 16);
+  opcode |= (rm & REG_MASK);
+  
+  opcode |= sf ? (1 << 20) : 0;
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
+}
+
 
 thumb_opcode_t thumb32_opcode_three_regs_any_imm5_shift_sf(uint32_t opcode,
 							   reg_t rd,
@@ -700,5 +806,59 @@ thumb_opcode_t m0_wfi(void) {
 
 thumb_opcode_t m0_yield(void) {
   return thumb16_opcode(48912);
+}
+
+
+/* ************************************************************ 
+   M3 OpCodes   (GENERATED CODE)
+   ************************************************************ */
+
+
+thumb_opcode_t m3_adc_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
+  return thumb32_opcode_two_regs_any_imm12_sf(4047503360, rd, rn, imm12, sf);
+}
+
+thumb_opcode_t m3_adc_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {
+  return thumb32_opcode_three_regs_any_imm5_shift_sf(3946840064, rd, rn, rm, imm5, shift, sf); 
+}
+
+thumb_opcode_t m3_add_const(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
+  return thumb32_opcode_two_regs_any_imm12_sf(4043309056, rd, rn, imm12, sf);
+}
+
+thumb_opcode_t m3_add_imm(reg_t rd, reg_t rn, uint16_t imm12) {
+  return thumb32_opcode_two_regs_any_imm12(4060086272, rd, rn, imm12);
+}
+
+thumb_opcode_t m3_add_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {
+  return thumb32_opcode_three_regs_any_imm5_shift_sf(3942645760, rd, rn, rm, imm5, shift, sf); 
+}
+
+thumb_opcode_t m3_add_sp_imm(reg_t rd, reg_t rn, uint8_t imm5, imm_shift_t shift, bool sf) {
+  return thumb32_opcode_two_regs_any_imm5_shift_sf(3943497728, rd, rn, imm5, shift, sf);
+}
+
+thumb_opcode_t m3_add_pc_imm(reg_t rd,uint16_t imm12) {
+  return thumb32_opcode_one_reg_any_imm12(4061069312, rd, imm12);
+}
+
+thumb_opcode_t m3_sub_pc_imm(reg_t rd,uint16_t imm12) {
+  return thumb32_opcode_one_reg_any_imm12(4071555072, rd, imm12);
+}
+
+thumb_opcode_t m3_and_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
+  return thumb32_opcode_two_regs_any_imm12_sf(4026531840, rd, rn, imm12, sf);
+}
+
+thumb_opcode_t m3_and_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {
+  return thumb32_opcode_three_regs_any_imm5_shift_sf(3925868544, rd, rn, rm, imm5, shift, sf); 
+}
+
+thumb_opcode_t m3_asr_imm(reg_t rd, reg_t rn, uint8_t imm5, bool sf) {
+  return thumb32_opcode_two_regs_any_imm5_sf(3931045920, rd, rn, imm5, sf);
+}
+
+thumb_opcode_t m3_asr_any(reg_t rd, reg_t rn, reg_t rm, bool sf) {
+  return thumb32_opcode_three_regs_any_sf(4198559744, rd, rn, rm, sf); 
 }
 
