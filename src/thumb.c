@@ -473,6 +473,51 @@ thumb_opcode_t m0_isb(void) {
   return op;  
 }
 
+/* ************************************************************
+   M3 OpCodes (32bit) (handmade for now) 
+   ************************************************************ */
+
+thumb_opcode_t m3_bfc(reg_t rd, uint8_t lsb, uint8_t width) {
+
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  uint32_t opcode = 0b11110011011011110000000000000000;
+
+  uint32_t msb  = lsb + width - 1;
+  if (msb > 31) msb = 31;
+  uint32_t imm2 = ((uint32_t)(lsb & IMM2_MASK)) << 6;
+  uint32_t imm3 = ((uint32_t)((lsb >> 2) & IMM3_MASK)) << 12;
+  uint32_t reg  = ((uint32_t)(rd & REG_MASK)) << 8;
+
+  opcode |= (imm2 | imm3 | reg | msb);
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;
+}
+
+thumb_opcode_t m3_bfi(reg_t rd, reg_t rn, uint8_t lsb, uint8_t width) {
+
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  uint32_t opcode = 0b11110011011000000000000000000000;
+
+  uint32_t msb  = lsb + width - 1;
+  if (msb > 31) msb = 31;
+  uint32_t imm2 = ((uint32_t)(lsb & IMM2_MASK)) << 6;
+  uint32_t imm3 = ((uint32_t)((lsb >> 2) & IMM3_MASK)) << 12;
+  uint32_t reg_d = ((uint32_t)(rd & REG_MASK)) << 8;
+  uint32_t reg_n = ((uint32_t)(rn & REG_MASK)) << 16; 
+
+  opcode |= (imm2 | imm3 | reg_d | reg_n| msb);
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;   
+}
+
+
+
 
 /* ************************************************************ 
    M0 OpCodes   (GENERATED CODE)

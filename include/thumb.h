@@ -97,7 +97,10 @@ extern thumb_opcode_t m0_bl(int32_t offset);
 extern thumb_opcode_t m0_dsb(void);
 extern thumb_opcode_t m0_dmb(void);
 extern thumb_opcode_t m0_isb(void);
-  
+
+extern thumb_opcode_t m3_bfc(reg_t rd, uint8_t lsb, uint8_t width);
+extern thumb_opcode_t m3_bfi(reg_t rd, reg_t rn, uint8_t lsb, uint8_t width);
+
 /* Generated code */
 extern thumb_opcode_t m0_adc_low(reg_t rdn, reg_t rm);
 extern thumb_opcode_t m0_add_imm3(reg_t rd, reg_t rm, uint8_t imm3);
