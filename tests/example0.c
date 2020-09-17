@@ -22,14 +22,60 @@
 /* SOFTWARE.									  */
 /**********************************************************************************/
 
-#ifndef __TEST_EXPECT_H_
-#define __TEST_EXPECT_H_
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include <stdint.h>
+#include <thumb.h>
 
-extern void test_step(void);
-extern void test_assert_reg(char *reg, uint32_t value);
-extern int test_expect_init(const char *testname);
-extern void test_expect_shutdown(void);
+#include <test_expect.h>
 
-#endif
+const char *testname = "example0";
+const char *fn = "example0.bin";
+
+int main(int argc, char **argv) {
+  (void) argc;
+  (void) argv;
+
+ 
+  uint16_t instrs[4];
+  instr_seq_t seq;
+  seq.size = 4;
+  seq.pos  = 0;
+  seq.mc = instrs;
+
+  if (!test_expect_init(testname)) {
+    printf("error starting initializing test_expect\n");
+    return 0;
+  }
+ 
+  emit_opcode(&seq, m0_mov_imm(r0, 2));
+  test_step();
+  test_assert_reg("r0", 2);
+  emit_opcode(&seq, m0_mov_imm(r1, 3));
+  test_step();
+  test_assert_reg("r1", 3);
+  emit_opcode(&seq, m0_add_low(r2, r1, r0));
+  test_step();
+  test_assert_reg("r2", 5);
+  emit_opcode(&seq, m0_add_any(r0, r2));
+  test_step();
+  test_assert_reg("r0", 7);
+  
+  test_expect_shutdown();
+  
+  FILE *fp = fopen(fn, "w");
+  if (!fp)  {
+    printf("Error opening file %s\n", fn);
+    return 0;
+  }
+
+  if (fwrite(seq.mc,sizeof(uint16_t),4,fp) < 4) {
+    printf("Error writing file\n");
+    return 0;
+  }
+
+  fclose(fp);
+  return 1;
+ 
+}

@@ -402,26 +402,48 @@ thumb_opcode_t thumb32_opcode_three_regs_any_imm5_shift_sf(uint32_t opcode,
 }
 
 
-/* ************************************************************
-   M0 OpCodes (32bit) (handmade for now) 
-   ************************************************************ */
-thumb_opcode_t m0_bl(int32_t offset) {
+thumb_opcode_t thumb32_opcode_cond_branch(uint32_t opcode,
+					  int32_t imm) {
   thumb_opcode_t op;
   op.kind = thumb32;
-  uint32_t opcode = 0b11110000000000001101000000000000;
-  uint32_t i1 = ((1 << 24) & offset) >> 24;
-  uint32_t i2 = ((1 << 23) & offset) >> 23;
-  uint32_t s  = ((1 << 25) & offset) >> 25;
+  uint32_t j1 = ((1 << 24) & imm) >> 24;
+  uint32_t j2 = ((1 << 23) & imm) >> 23;
+  uint32_t s  = ((1 << 25) & imm) >> 25;
+  opcode |= (j1 | j2) | (s << 26);
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  uint16_t imm11 = ((imm >> 1) & IMM11_MASK);
+  uint16_t imm10 = ((imm >> 12) & IMM10_MASK);
+  op.opcode.thumb32.high |= imm10;
+  op.opcode.thumb32.low |= imm11;
+  return op;
+}
+
+thumb_opcode_t thumb32_opcode_branch(uint32_t opcode,
+				     int32_t imm) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  uint32_t i1 = ((1 << 24) & imm) >> 24;
+  uint32_t i2 = ((1 << 23) & imm) >> 23;
+  uint32_t s  = ((1 << 25) & imm) >> 25;
   uint32_t j1 = (s == i1) ? (1 << 13) : 0;
   uint32_t j2 = (s == i2) ? (1 << 11) : 0;
   opcode |= (j1 | j2) | (s << 26);
   op.opcode.thumb32.high = (opcode >> 16);
   op.opcode.thumb32.low  = opcode;
-  uint16_t imm11 = ((offset >> 1) & IMM11_MASK);
-  uint16_t imm10 = ((offset >> 12) & IMM10_MASK);
+  uint16_t imm11 = ((imm >> 1) & IMM11_MASK);
+  uint16_t imm10 = ((imm >> 12) & IMM10_MASK);
   op.opcode.thumb32.high |= imm10;
   op.opcode.thumb32.low |= imm11;
   return op;
+}
+
+
+/* ************************************************************
+   M0 OpCodes (32bit) (handmade for now) 
+   ************************************************************ */
+thumb_opcode_t m0_bl(int32_t offset) {
+  return thumb32_opcode_branch(0b11110000000000001101000000000000, offset);
 }
 
 thumb_opcode_t m0_dsb(void) {

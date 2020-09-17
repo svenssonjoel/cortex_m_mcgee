@@ -33,7 +33,9 @@ typedef enum {
   two_regs_any_imm5_sf,
   two_regs_any_imm5_shift_sf,
   three_regs_any_sf,
-  three_regs_any_imm5_shift_sf
+  three_regs_any_imm5_shift_sf,
+  cond_branch,
+  branch
 } thumb32_opcode_format;
 
 
@@ -60,6 +62,24 @@ const thumb32_opcode opcodes[] =
     {"m3_and_any"    , 0b11101010000000000000000000000000, three_regs_any_imm5_shift_sf},
     {"m3_asr_imm"    , 0b11101010010011110000000000100000, two_regs_any_imm5_sf},
     {"m3_asr_any"    , 0b11111010010000001111000000000000, three_regs_any_sf},
+    {"m3_beq"        , 0b11110000000000001000000000000000, cond_branch},
+    {"m3_bne"        , 0b11110000010000001000000000000000, cond_branch},
+    {"m3_bcs"        , 0b11110000100000001000000000000000, cond_branch},
+    {"m3_bcc"        , 0b11110000110000001000000000000000, cond_branch},
+    {"m3_bmi"        , 0b11110001000000001000000000000000, cond_branch},
+    {"m3_bpl"        , 0b11110001010000001000000000000000, cond_branch},
+    {"m3_bvs"        , 0b11110001100000001000000000000000, cond_branch},
+    {"m3_bvc"        , 0b11110001110000001000000000000000, cond_branch},
+    {"m3_bhi"        , 0b11110010000000001000000000000000, cond_branch},
+    {"m3_bls"        , 0b11110010010000001000000000000000, cond_branch},
+    {"m3_bge"        , 0b11110010100000001000000000000000, cond_branch},
+    {"m3_blt"        , 0b11110010110000001000000000000000, cond_branch},
+    {"m3_bgt"        , 0b11110011000000001000000000000000, cond_branch},
+    {"m3_ble"        , 0b11110011010000001000000000000000, cond_branch},
+    {"m3_bal"        , 0b11110011110000001000000000000000, cond_branch},
+    {"m3_b"          , 0b11110000000000001001000000000000, branch},
+    
+    
     {NULL, 0, 0}};
 
 
@@ -88,6 +108,12 @@ void print_extern_decl(thumb32_opcode op) {
     break;
   case three_regs_any_imm5_shift_sf:
     printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);\n", op.name);
+    break;
+  case cond_branch:
+    printf("extern thumb_opcode_t %s(int32_t offset);\n", op.name);
+    break;
+  case branch:
+    printf("extern thumb_opcode_t %s(int32_t offset);\n", op.name);
     break;
   default:
     printf("Error - unknown\n");
@@ -136,6 +162,16 @@ void print_opcode(thumb32_opcode op) {
   case three_regs_any_imm5_shift_sf:
     printf("thumb_opcode_t %s(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {\n", op.name);
     printf("  return thumb32_opcode_three_regs_any_imm5_shift_sf(%u, rd, rn, rm, imm5, shift, sf); \n", op.opcode);
+    printf("}\n\n");
+    break;
+  case cond_branch:
+    printf("extern thumb_opcode_t %s(int32_t offset) {\n", op.name);
+    printf("  return thumb32_opcode_cond_branch(%u, offset); \n", op.opcode);
+    printf("}\n\n");
+    break;
+  case branch:
+    printf("extern thumb_opcode_t %s(int32_t offset);\n", op.name);
+    printf("  return thumb32_opcode_branch(%u, offset); \n", op.opcode);
     printf("}\n\n");
     break;
   default:

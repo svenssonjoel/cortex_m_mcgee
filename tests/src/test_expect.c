@@ -51,7 +51,7 @@ void output_startup(char *fn_bin) {
 	  "    }\n"
 	  "}\n");
   fprintf(out, "expect -re \"> ?$\"\n");
-  fprintf(out, "send -- \"load_image %s 0x20000000\\n\"\n", fn_bin);
+  fprintf(out, "send -- \"load_image %s 0x20000000 bin\\n\"\n", fn_bin);
   fprintf(out, "expect -re \"> ?$\"\n");
 }
 
@@ -60,11 +60,11 @@ void test_step(void) {
   fprintf(out, "expect -re \"> ?$\"\n");
 }
   
-void test_assert_reg(char *reg, char *value) {
+void test_assert_reg(char *reg, uint32_t value) {
   fprintf(out, "send -- \"reg %s\\n\"\n", reg);
   fprintf(out,
 	  "expect {\n"
-	  "    \"%s*%s*\\n\" {\n"
+	  "    \"%s*0x%08x*\\n\" {\n"
 	  "        puts \"%s set successfully\\n\"\n"
 	  "    }\n"
 	  "    \"%s*0x*\\n\" {\n"

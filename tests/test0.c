@@ -50,14 +50,16 @@ int main(int argc, char **argv) {
   
   emit_opcode(&seq, m0_mov_imm(r0, 2));
   test_step();
-  test_assert_reg("r0", "0x00000002");
+  test_assert_reg("r0", 2);
   emit_opcode(&seq, m0_mov_imm(r1, 3));
   test_step();
-  test_assert_reg("r1", "0x00000003");
+  test_assert_reg("r1", 3);
   emit_opcode(&seq, m0_add_low(r2, r1, r0));
   test_step();
-  test_assert_reg("r2", "0x00000005");
-  emit_opcode(&seq, m0_add_any(r0, r2)); 
+  test_assert_reg("r2", 5);
+  emit_opcode(&seq, m0_add_any(r0, r2));
+  test_step();
+  test_assert_reg("r0", 7);
   emit_opcode(&seq, m0_asr_imm(r0, r0, 1)); 
   emit_opcode(&seq, m0_dsb());
   emit_opcode(&seq, m0_dmb());
