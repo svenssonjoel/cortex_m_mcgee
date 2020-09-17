@@ -93,11 +93,6 @@ typedef struct {
 extern int emit_opcode(instr_seq_t *seq, thumb_opcode_t op);
 
 /* handcoded */
-extern thumb_opcode_t m0_bl(int32_t offset);
-extern thumb_opcode_t m0_dsb(void);
-extern thumb_opcode_t m0_dmb(void);
-extern thumb_opcode_t m0_isb(void);
-
 extern thumb_opcode_t m3_bfc(reg_t rd, uint8_t lsb, uint8_t width);
 extern thumb_opcode_t m3_bfi(reg_t rd, reg_t rn, uint8_t lsb, uint8_t width);
 
@@ -191,9 +186,12 @@ extern thumb_opcode_t m0_wfe(void);
 extern thumb_opcode_t m0_wfi(void);
 extern thumb_opcode_t m0_yield(void);
 
-/* M3 Instructions */
+/* M0 - M3 32bit Instructions */
 
-
+extern thumb_opcode_t m0_dsb(void);
+extern thumb_opcode_t m0_dmb(void);
+extern thumb_opcode_t m0_isb(void);
+extern thumb_opcode_t m0_bl(int32_t offset);
 extern thumb_opcode_t m3_adc_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
 extern thumb_opcode_t m3_adc_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);
 extern thumb_opcode_t m3_add_const(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
@@ -206,6 +204,27 @@ extern thumb_opcode_t m3_and_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
 extern thumb_opcode_t m3_and_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);
 extern thumb_opcode_t m3_asr_imm(reg_t rd, reg_t rn, uint8_t imm5, bool sf);
 extern thumb_opcode_t m3_asr_any(reg_t rd, reg_t rn, reg_t rm, bool sf);
-
+extern thumb_opcode_t m3_beq(int32_t offset);
+extern thumb_opcode_t m3_bne(int32_t offset);
+extern thumb_opcode_t m3_bcs(int32_t offset);
+extern thumb_opcode_t m3_bcc(int32_t offset);
+extern thumb_opcode_t m3_bmi(int32_t offset);
+extern thumb_opcode_t m3_bpl(int32_t offset);
+extern thumb_opcode_t m3_bvs(int32_t offset);
+extern thumb_opcode_t m3_bvc(int32_t offset);
+extern thumb_opcode_t m3_bhi(int32_t offset);
+extern thumb_opcode_t m3_bls(int32_t offset);
+extern thumb_opcode_t m3_bge(int32_t offset);
+extern thumb_opcode_t m3_blt(int32_t offset);
+extern thumb_opcode_t m3_bgt(int32_t offset);
+extern thumb_opcode_t m3_ble(int32_t offset);
+extern thumb_opcode_t m3_bal(int32_t offset);
+extern thumb_opcode_t m3_b(int32_t offset);
+extern thumb_opcode_t m3_bic_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf);
+extern thumb_opcode_t m3_bid_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf);
+extern thumb_opcode_t m3_clrex(void);
+extern thumb_opcode_t m3_clz(reg_t rd, reg_t rn, reg_t rm);
+extern thumb_opcode_t m3_cmn_imm(reg_t rd, uint16_t imm12);
+extern thumb_opcode_t m3_cmn_any(reg_t rd, reg_t rn, uint8_t imm5, imm_shift_t shift);
 
 #endif

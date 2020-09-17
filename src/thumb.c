@@ -331,6 +331,27 @@ thumb_opcode_t thumb32_opcode_two_regs_any_imm5_sf(uint32_t opcode,
   
 }
 
+thumb_opcode_t thumb32_opcode_two_regs_any_imm5_shift(uint32_t opcode,
+						      reg_t rd,
+						      reg_t rn,
+						      uint8_t imm5,
+						      imm_shift_t shift) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= (rn & REG_MASK);
+  uint8_t imm2 = imm5 & 0b00000011;
+  uint8_t imm3 = (imm5 >> 2) & 0b00000111;
+  opcode |= ((uint32_t)imm2) << 6;
+  opcode |= ((uint32_t)imm3) << 12;
+  opcode |= shift_mask(shift) << 4;
+  
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;    
+}
+
+
 thumb_opcode_t thumb32_opcode_two_regs_any_imm5_shift_sf(uint32_t opcode,
 							 reg_t rd,
 							 reg_t rn,
@@ -351,8 +372,22 @@ thumb_opcode_t thumb32_opcode_two_regs_any_imm5_shift_sf(uint32_t opcode,
   
   op.opcode.thumb32.high = (opcode >> 16);
   op.opcode.thumb32.low  = opcode;
-  return op;  
+  return op;    
+}
+
+thumb_opcode_t thumb32_opcode_three_regs_any(uint32_t opcode,
+					     reg_t rd,
+					     reg_t rn,
+					     reg_t rm) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= ((rd & REG_MASK) << 8);
+  opcode |= ((rn & REG_MASK) << 16);
+  opcode |= (rm & REG_MASK);
   
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;  
 }
 
 thumb_opcode_t thumb32_opcode_three_regs_any_sf(uint32_t opcode,
@@ -438,41 +473,6 @@ thumb_opcode_t thumb32_opcode_branch(uint32_t opcode,
   return op;
 }
 
-
-/* ************************************************************
-   M0 OpCodes (32bit) (handmade for now) 
-   ************************************************************ */
-thumb_opcode_t m0_bl(int32_t offset) {
-  return thumb32_opcode_branch(0b11110000000000001101000000000000, offset);
-}
-
-thumb_opcode_t m0_dsb(void) {
-  thumb_opcode_t op;
-  op.kind = thumb32;
-  uint32_t opcode = 0b11110011101111111000111101001111;
-  op.opcode.thumb32.high = (opcode >> 16);
-  op.opcode.thumb32.low  = opcode;
-  return op;  
-}
-
-thumb_opcode_t m0_dmb(void) {
-  thumb_opcode_t op;
-  op.kind = thumb32;
-  uint32_t opcode = 0b11110011101111111000111101011111;
-  op.opcode.thumb32.high = (opcode >> 16);
-  op.opcode.thumb32.low  = opcode;
-  return op;  
-}
-
-thumb_opcode_t m0_isb(void) {
-  thumb_opcode_t op;
-  op.kind = thumb32;
-  uint32_t opcode = 0b11110011101111111000111101101111;
-  op.opcode.thumb32.high = (opcode >> 16);
-  op.opcode.thumb32.low  = opcode;
-  return op;  
-}
-
 /* ************************************************************
    M3 OpCodes (32bit) (handmade for now) 
    ************************************************************ */
@@ -516,8 +516,8 @@ thumb_opcode_t m3_bfi(reg_t rd, reg_t rn, uint8_t lsb, uint8_t width) {
   return op;   
 }
 
-
-
+/* TODOs */
+/* - CDP and CDP2 */
 
 /* ************************************************************ 
    M0 OpCodes   (GENERATED CODE)
@@ -877,9 +877,24 @@ thumb_opcode_t m0_yield(void) {
 
 
 /* ************************************************************ 
-   M3 OpCodes   (GENERATED CODE)
+   M0 - M3 32bit OpCodes   (GENERATED CODE)
    ************************************************************ */
 
+thumb_opcode_t m0_dsb(void) {
+  return thumb32_opcode(4089417551);
+}
+
+thumb_opcode_t m0_dmb(void) {
+  return thumb32_opcode(4089417567);
+}
+
+thumb_opcode_t m0_isb(void) {
+  return thumb32_opcode(4089417583);
+}
+
+thumb_opcode_t m0_bl(int32_t offset) {
+  return thumb32_opcode_branch(4026580992, offset); 
+}
 
 thumb_opcode_t m3_adc_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
   return thumb32_opcode_two_regs_any_imm12_sf(4047503360, rd, rn, imm12, sf);
@@ -929,3 +944,90 @@ thumb_opcode_t m3_asr_any(reg_t rd, reg_t rn, reg_t rm, bool sf) {
   return thumb32_opcode_three_regs_any_sf(4198559744, rd, rn, rm, sf); 
 }
 
+thumb_opcode_t m3_beq(int32_t offset) {
+  return thumb32_opcode_cond_branch(4026564608, offset); 
+}
+
+thumb_opcode_t m3_bne(int32_t offset) {
+  return thumb32_opcode_cond_branch(4030758912, offset); 
+}
+
+thumb_opcode_t m3_bcs(int32_t offset) {
+  return thumb32_opcode_cond_branch(4034953216, offset); 
+}
+
+thumb_opcode_t m3_bcc(int32_t offset) {
+  return thumb32_opcode_cond_branch(4039147520, offset); 
+}
+
+thumb_opcode_t m3_bmi(int32_t offset) {
+  return thumb32_opcode_cond_branch(4043341824, offset); 
+}
+
+thumb_opcode_t m3_bpl(int32_t offset) {
+  return thumb32_opcode_cond_branch(4047536128, offset); 
+}
+
+thumb_opcode_t m3_bvs(int32_t offset) {
+  return thumb32_opcode_cond_branch(4051730432, offset); 
+}
+
+thumb_opcode_t m3_bvc(int32_t offset) {
+  return thumb32_opcode_cond_branch(4055924736, offset); 
+}
+
+thumb_opcode_t m3_bhi(int32_t offset) {
+  return thumb32_opcode_cond_branch(4060119040, offset); 
+}
+
+thumb_opcode_t m3_bls(int32_t offset) {
+  return thumb32_opcode_cond_branch(4064313344, offset); 
+}
+
+thumb_opcode_t m3_bge(int32_t offset) {
+  return thumb32_opcode_cond_branch(4068507648, offset); 
+}
+
+thumb_opcode_t m3_blt(int32_t offset) {
+  return thumb32_opcode_cond_branch(4072701952, offset); 
+}
+
+thumb_opcode_t m3_bgt(int32_t offset) {
+  return thumb32_opcode_cond_branch(4076896256, offset); 
+}
+
+thumb_opcode_t m3_ble(int32_t offset) {
+  return thumb32_opcode_cond_branch(4081090560, offset); 
+}
+
+thumb_opcode_t m3_bal(int32_t offset) {
+  return thumb32_opcode_cond_branch(4089479168, offset); 
+}
+
+thumb_opcode_t m3_b(int32_t offset) {
+  return thumb32_opcode_branch(4026568704, offset); 
+}
+
+thumb_opcode_t m3_bic_imm(reg_t rd, reg_t rn, uint16_t imm12, bool sf) {
+  return thumb32_opcode_two_regs_any_imm12_sf(4028628992, rd, rn, imm12, sf);
+}
+
+thumb_opcode_t m3_bid_any(reg_t rd, reg_t rn, reg_t rm, uint8_t imm5, imm_shift_t shift, bool sf) {
+  return thumb32_opcode_three_regs_any_imm5_shift_sf(3900702720, rd, rn, rm, imm5, shift, sf); 
+}
+
+thumb_opcode_t m3_clrex(void) {
+  return thumb32_opcode(4089417519);
+}
+
+thumb_opcode_t m3_clz(reg_t rd, reg_t rn, reg_t rm) {
+  return thumb32_opcode_three_regs_any(4205899904, rd, rn, rm); 
+}
+
+thumb_opcode_t m3_cmn_imm(reg_t rd,uint16_t imm12) {
+  return thumb32_opcode_one_reg_any_imm12(4044361472, rd, imm12);
+}
+
+thumb_opcode_t m3_cmn_any(reg_t rd, reg_t rn, uint8_t imm5, imm_shift_t shift) {
+  return thumb32_opcode_two_regs_any_imm5_shift(3943698176, rd, rn, imm5, shift);
+}
