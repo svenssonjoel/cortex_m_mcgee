@@ -82,15 +82,22 @@ const thumb32_opcode opcodes[] =
     {"m3_bal"        , 0b11110011110000001000000000000000, cond_branch},
     {"m3_b"          , 0b11110000000000001001000000000000, branch},
     {"m3_bic_imm"    , 0b11110000001000000000000000000000, two_regs_any_imm12_sf},
-    {"m3_bid_any"    , 0b11101000100000000000000000000000, three_regs_any_imm5_shift_sf},
+    {"m3_bic_any"    , 0b11101000100000000000000000000000, three_regs_any_imm5_shift_sf},
     {"m3_clrex"      , 0b11110011101111111000111100101111, nothing},
     {"m3_clz"        , 0b11111010101100001111000010000000, three_regs_any},
     {"m3_cmn_imm"    , 0b11110001000100000000111100000000, one_reg_any_imm12},
     {"m3_cmn_any"    , 0b11101011000100000000111100000000, two_regs_any_imm5_shift},
-    
-    
-    
+    {"m3_cmp_imm"    , 0b11110001101100000000111100000000, one_reg_any_imm12},
+    {"m3_cmp_any"    , 0b11101011101100000000111100000000, two_regs_any_imm5_shift},
+    {"m3_csdb"       , 0b11110011101011111000000000010100, nothing},
+    {"m3_eor_imm"    , 0b11110000100000000000000000000000, two_regs_any_imm12_sf},
+    {"m3_eor_any"    , 0b11101010100000000000000000000000, three_regs_any_imm5_shift_sf},
     {NULL, 0, 0}};
+
+/* left out for now, 
+   DBG
+   LDC, LDC2
+*/ 
 
 
 void print_extern_decl(thumb32_opcode op) {
