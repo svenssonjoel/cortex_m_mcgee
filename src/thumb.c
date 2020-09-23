@@ -266,6 +266,18 @@ thumb_opcode_t thumb32_opcode_one_reg_any_imm12(uint32_t opcode,
   return op;  
 }
 
+thumb_opcode_t thumb32_opcode_one_reg_any_registerlist(uint32_t opcode,
+						       reg_t rn,
+						       uint16_t rl) {
+  thumb_opcode_t op;
+  op.kind = thumb32;
+  opcode |= (rn & REG_MASK) << 16;
+  opcode |= rl;
+  op.opcode.thumb32.high = (opcode >> 16);
+  op.opcode.thumb32.low  = opcode;
+  return op;
+}
+
 thumb_opcode_t thumb32_opcode_two_regs_any_imm12(uint32_t opcode,
 						 reg_t rd,
 						 reg_t rn,

@@ -28,6 +28,7 @@
 typedef enum {
   nothing,
   one_reg_any_imm12,
+  one_reg_any_registerlist,
   two_regs_any_imm12,
   two_regs_any_imm12_sf,
   two_regs_any_imm5_sf,
@@ -92,6 +93,8 @@ const thumb32_opcode opcodes[] =
     {"m3_csdb"       , 0b11110011101011111000000000010100, nothing},
     {"m3_eor_imm"    , 0b11110000100000000000000000000000, two_regs_any_imm12_sf},
     {"m3_eor_any"    , 0b11101010100000000000000000000000, three_regs_any_imm5_shift_sf},
+    {"m3_ldm"        , 0b11101000100100000000000000000000, one_reg_any_registerlist},
+    {"m3_ldmw"       , 0b11101000101100000000000000000000, one_reg_any_registerlist},
     {NULL, 0, 0}};
 
 /* left out for now, 
@@ -107,6 +110,9 @@ void print_extern_decl(thumb32_opcode op) {
     break;
   case one_reg_any_imm12:
     printf("extern thumb_opcode_t %s(reg_t rd, uint16_t imm12);\n", op.name);
+    break;
+  case one_reg_any_registerlist:
+    printf("extern thumb_opcode_t %s(reg_t rn, uint16_t rl);\n", op.name);
     break;
   case two_regs_any_imm12:
     printf("extern thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12);\n", op.name);
@@ -156,7 +162,12 @@ void print_opcode(thumb32_opcode op) {
     printf("thumb_opcode_t %s(reg_t rd,uint16_t imm12) {\n", op.name);
     printf("  return thumb32_opcode_one_reg_any_imm12(%u, rd, imm12);\n", op.opcode);
     printf("}\n\n");
-    break;  
+    break;
+  case one_reg_any_registerlist:
+    printf("thumb_opcode_t %s(reg_t rn, uint16_t rl) {\n", op.name);
+    printf("  return thump32_opcode_one_reg_any_registerlist(%u, rn, rl);\n", op.opcode);
+    printf("}\n\n");
+    break;
   case two_regs_any_imm12:
     printf("thumb_opcode_t %s(reg_t rd, reg_t rn, uint16_t imm12) {\n", op.name);
     printf("  return thumb32_opcode_two_regs_any_imm12(%u, rd, rn, imm12);\n", op.opcode);
