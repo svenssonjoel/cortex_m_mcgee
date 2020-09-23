@@ -95,6 +95,8 @@ const thumb32_opcode opcodes[] =
     {"m3_eor_any"    , 0b11101010100000000000000000000000, three_regs_any_imm5_shift_sf},
     {"m3_ldm"        , 0b11101000100100000000000000000000, one_reg_any_registerlist},
     {"m3_ldmw"       , 0b11101000101100000000000000000000, one_reg_any_registerlist},
+    {"m3_ldmdb"      , 0b11101001000100000000000000000000, one_reg_any_registerlist},
+    {"m3_ldmdbw"     , 0b11101001001100000000000000000000, one_reg_any_registerlist},
     {NULL, 0, 0}};
 
 /* left out for now, 
