@@ -117,29 +117,22 @@ thumb_opcode_t thumb16_opcode(uint16_t opcode) {
 }
 
 thumb_opcode_t thumb16_opcode_imm7(uint16_t opcode, uint8_t imm7) {
-  thumb_opcode_t op;
-  op.kind = thumb16;
-  op.opcode.thumb16 =
-    opcode | (imm7 & IMM7_MASK);
+  thumb_opcode_t op = thumb16_opcode(opcode);
+  op.opcode.thumb16 |= (imm7 & IMM7_MASK);
   return op;
 }
 
 thumb_opcode_t thumb16_opcode_imm8(uint16_t opcode, uint8_t imm8) {
-  thumb_opcode_t op;
-  op.kind = thumb16;
-  op.opcode.thumb16 =
-    opcode | imm8;
+  thumb_opcode_t op = thumb16_opcode(opcode);
+  op.opcode.thumb16 |= imm8;
   return op;
 }
 
 thumb_opcode_t thumb16_opcode_imm11(uint16_t opcode, uint16_t imm11) {
-  thumb_opcode_t op;
-  op.kind = thumb16;
-  op.opcode.thumb16 =
-    opcode | (imm11 & IMM11_MASK);
+  thumb_opcode_t op = thumb16_opcode(opcode);
+  op.opcode.thumb16 |= (imm11 & IMM11_MASK);
   return op;
 }
-
 
 thumb_opcode_t thumb16_opcode_one_reg_low_imm5(uint16_t opcode, reg_t rd, uint8_t imm5) {
   thumb_opcode_t op;
